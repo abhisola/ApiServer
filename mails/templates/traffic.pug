@@ -1,0 +1,65 @@
+doctype html
+head
+  meta(charset='utf-8')
+  title Target Smart Shelf - Foot Traffic Analysis From Kellogs
+style.
+  .shelf-container {
+  width: 100%;
+  }
+  .shelf-title {
+  background-color: #e2434b;
+  color: #fff1c1;
+  padding: 10px;
+  }
+  .store-title2 {
+  background-color: #fff7c2;
+  color: #e2434b;
+  padding: 10px;
+  }
+  .store-name {
+  background-color: #f0f3f3;
+  color: #404b69;
+  padding: 10px;
+  }
+  table.shelf {
+  border: dashed #bbbbbb 1.0pt;
+  }
+  table.shelf tr td {
+  border: dashed #bbbbbb 1.0pt;
+  }
+  table.shelf tr.shelf-row td{
+  background-color: white;
+  color: #2d4059;
+  font-weight: 600;
+  padding: 10px;
+  text-align: center;
+  }
+  h3,h4 {
+  margin: 0;
+  }
+.shelf-container
+  table.shelf
+    tbody
+      tr
+        td(colspan='3')
+          h3.shelf-title Target Smart Shelf - Foot Traffic Analysis From Kellogs
+      tr
+        td(colspan='3')
+          h4.store-title2
+            | Store: #{rackname} (#{address}) | As of: #{start} To #{end}
+      tr
+        td(colspan='3')
+          h4.store-name Total People Count And Avg. Dwell Time (in Sec.)
+      tr.shelf-row
+        td
+          h2 #{people_count}
+          h4 People Count
+        td
+          h2 #{dwell_time}s
+          h4 Avg Dwell Time
+      tr
+        td(colspan='3')
+          h4.store-name People Count – by Hour
+      tr
+        td(colspan='3')
+          h4.store-name Dwell Time (in Sec.) – by Hour

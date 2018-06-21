@@ -8,21 +8,17 @@ var _ = require('lodash');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var levelsRouter = require('./routes/levels');
-var targetRouter = require('./routes/targetController');
+var shelvesRouter = require('./routes/shelves');
+var trafficRouter = require('./routes/traffic');
 var targetModel = require('./models/target');
 
 var settings = require('./settings');
 var racks = require('./racks');
 var app = express();
 
-var mqtt = require('mqtt')
-var client  = mqtt.connect('ws://smartrackmqtt.herokuapp.com')
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.set('mqttclient',client);
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
@@ -38,8 +34,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/api/levels', levelsRouter);
-app.use('/api/target', targetRouter);
+app.use('/shelves', shelvesRouter);
+app.use('/traffic', trafficRouter);
 
 app.post('/api/traffic/:_num', function(req,res,next){
   var racknum = req.params['_num'];
@@ -80,37 +76,5 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
-
-client.on('connect', function() {
-	console.log('Connected');
-  _.forEach(racks,function(rack) { 
-    //client.subscribe('motiondetect/target/'+rack.racknum);
-    //console.log("subscribed to "+'motiondetect/target/'+rack.racknum)
-  });
-});
-
-// fired when a message is received
-client.on('message', function(topic, message) {
-  console.log('message', topic, message.toString());
-  _.forEach(racks,function(rack) {
-      var motioncount = 'motiondetect/target/'+rack.racknum;
-      var tmp = JSON.parse(message.toString());
-          if (topic == motioncount) {
-            var data = {
-              racknum : rack.racknum,
-              time : tmp.time
-            }
-            if(tmp.time > 0) {
-              targetModel.addMotionData(data, function(err, msg){
-                if(err) console.log(err);
-                else {
-                  console.log(msg);
-                }
-              })
-            }
-            return false;
-          }
-      })
 });
 module.exports = app;

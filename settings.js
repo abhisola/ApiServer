@@ -22,7 +22,7 @@ var settings = {
                 bundle: true,
                 static: './'
             }
-        }, 
+        },
         mongo : {
             backend: {
                 type: 'mongo',
@@ -46,9 +46,20 @@ var settings = {
             host : 'smart-rack.c7neg6roarnk.us-east-1.rds.amazonaws.com',
             port : 5432
         }
+    },
+    mail : {
+         service: 'gmail',
+             auth: {
+                 user: 'ahtastraders@gmail.com',
+                 pass: '09403080450'
+             },
+            from: 'azizahtas@gmail.com',
+            to: [
+                'ahtastraders@gmail.com',
+                'abhishek.solapurkar@itconnectus.com',
+                'sashi7582@gmail.com'
+            ]
     }
-
-
 }
 
 

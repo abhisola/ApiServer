@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>smarTRack&trade; - Target Store Visit</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="../template.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+      <a class="navbar-brand" href="#"><img src="Kelloggs-logo.svg" alt="Kellogg's"> Virtual Store Visit</a>
+      <ul class="nav navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="../shelves/000004.html">Shelves </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="#"><span> Target </span></a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="container">
+      <div class="starter-template">
+
+        <h1>Foot Traffic - T1756 Olathe (15345 W 119TH ST, Olathe, KS)</h1>
+        <p class="lead">
+          To view audience, select a rack and date range below.
+          <a href="#" id="info" ><i class="fa fa-info-circle" style="font-size:24px"></i></a>
+        </p>
+        <p id="details" style="display:none;">The smart shelf passively collects wifi device data, and extrapolates for total audience based on the number of devices seen. Additional analytics, like return rate, store crossover, and linger time, are also available.</p>
+        <form class="form-inline">
+
+          <div class="form-group">
+            <label for="startDate">From</label>
+            <input class="form-control" type="date" value="2016-11-10" id="startDate">
+          </div>
+          <div class="form-group">
+            <label for="endDate">To</label>
+            <input class="form-control" type="date" value="2016-11-30" id="endDate">
+          </div>
+          <button type="button" onClick="fetchDateRange()" class="btn btn-primary">View</button>
+          <i class="fa fa-gear fa-spin hidden-xl-down" style="font-size:30px"></i>
+        </form>
+        <div calss="row">
+         <div class="col-md-12">
+          	<h2 style="background-color: #e8e8e8; padding: 10px; color:#c12929; margin-top: 20px;">People Count and Dwell Time</h2>
+         </div>
+          <div class="col-md-2" style="
+          border: 1px solid rgba(0,0,0,.15); padding: 21px; margin-top: 20px; text-align: center; width: 200px; height: 147px;">
+          	<h2 id="counter">0</h2> <br>
+          	<h5>People Count</h5>
+          </div>
+           <div class="col-md-2" style="border: 1px solid rgba(0,0,0,.15); padding: 21px; margin-top: 20px; margin-bottom: 20px; text-align: center; width: 200px; height: 147px; margin-left: 10px;">
+          	<h2 id="avgTime">0</h2>
+          	<h5>Dwell Time</h5>
+          </div>
+          <!--
+          <div class="col-md-3" style="border: 1px solid rgba(0,0,0,.15); padding: 30px; margin-top: 20px; margin-left: 10px; text-align: center; width: 300px; height: 200px;">
+          	<h4>Date Range</h4>
+          	<h5 id="range">2018-06-12 00:00 <br>To <br>2018-06-12 23:59</h5>
+          </div>
+
+			<div class="col-md-8" style="margin-top: 30px;">
+       		<h2 style="text-align: center">Todays Traffic</h2>
+        		<canvas id="todayChart" style="width:100%;"></canvas>
+          	</div>
+          	<div class="col-md-2" style="margin-top: 30px;">
+          		<button id="#resetButton" class="btn btn-warning">Reset</button>
+          		<i class="fa fa-gear fa-spin hidden-xl-down" style="font-size:30px"></i>
+          	</div>
+          	<div class="col-md-8">
+          	<h2 style="text-align: center">Todays Traffic Hourly</h2>
+        		<canvas id="hourlyChart" style="width:100%;"></canvas>
+          	</div>
+          	-->
+          	<div class="col-md-8">
+          	<h2 style="background-color: #e8e8e8; padding: 10px; color:#c12929;">Dwell Time (in seconds)</h2>
+        		<canvas id="dateRangeChart" style="width:100%;"></canvas>
+          	</div>
+          	<div class="col-md-8">
+          	<h2 style="background-color: #e8e8e8; padding: 10px; color:#c12929;">Foot Traffic Count Hourly</h2>
+        		<canvas id="dateRangeHourlyChart" style="width:100%;"></canvas>
+          	</div>
+        </div>
+        <div class="row" id="audience">
+
+        </div>
+
+      </div>
+    </div><!-- /.container -->
+
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+    <script src="jquery-dateFormat.min.js"></script>
+    <script src="../lodash.min.js"></script>
+    <script src="../luxon.min.js"></script>
+    <script type="text/javascript">
+
+	  var racknum = '000004';
+      var api = {
+        local : {
+          host : 'http://192.168.1.105:3001',
+        },
+        online : {
+          host : 'https://smartrackapi.herokuapp.com',
+        }
+      }
+
+	  var used_host = api.online.host;
+      var mqtt;
+      var reconnectTimeout = 2000;
+      var host = "smartrackmqtt.herokuapp.com";
+      var port = 80;
+      var subTo = "motiondetect/target/"+racknum;
+		var ctx = null;
+		var chartInstance = null;
+		var ctxRange = null;
+		var chartInstanceRange = null;
+		var ctxHourChart = null;
+		var chartHourInstance = null;
+		var ctxHourChartRange = null;
+		var chartHourRangeInstance = null;
+
+      // configure charts
+      Chart.defaults.global.legend.display = false;
+      Chart.defaults.global.animation = false;
+      var currData = new Array();
+
+      function updateTodayChart(json) {
+		  if(chartInstance) chartInstance.destroy();
+          var labels = new Array();
+          var data = new Array();
+		  var count = 0;
+		  var sum = 0;
+          $.each(json.data, function(i, day) {
+			  if(parseInt(day['time_recorded'] < 120)) {
+				  console.log(day['time_recorded']);
+				var seconds = parseInt( day['time_recorded'] ) ;
+				labels.push( sanatizeTimeAndFormat(day['local_time']));
+				data.push( seconds );
+				count++;
+				sum += parseInt(day['time_recorded']);
+			  }
+          });
+		  var avg = Math.round( sum / count);
+		  if(avg < 0) avg = 0;
+		  $("#avgTime").html(avg);
+		  $("#counter").html(count);
+         ctx = $("#todayChart").get(0).getContext("2d");
+         chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                data: data,
+				  label: "Time Spent",
+				  backgroundColor : 'rgb(54, 162, 235)'
+              }]
+              // datasets: [ { data: data } ]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+					  min: 0,
+					  stepSize: 20
+                  }
+                }],
+                xAxes: []
+              }
+            }
+        });
+        hideSpinner();
+      }
+
+	  function updateDateRangeChart(json) {
+		   var labels = new Array();
+          var data = new Array();
+		  var count = 0;
+		  var sum = 0;
+          $.each(json.data, function(i, day) {
+			  var seconds = parseInt( day['time_recorded'] ) ;
+			  if(seconds < 120) {
+				labels.push(sanatizeTimeAndFormat(day['local_time']));
+				data.push( seconds );
+				count++;
+				sum += seconds;
+			  }
+          });
+		  var avg = Math.round( sum / count);
+		  if(avg < 0) avg = 0;
+		  $("#avgTime").html(avg);
+		  $("#counter").html(count);
+
+		  if(chartInstanceRange) chartInstanceRange.destroy();
+         ctxRange = $("#dateRangeChart").get(0).getContext("2d");
+         chartInstanceRange = new Chart(ctxRange, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                data: data,
+				  label: "Time Spent",
+				  backgroundColor : 'rgb(54, 162, 235)'
+              }]
+              // datasets: [ { data: data } ]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+					  min: 0,
+					  stepSize: 20
+                  }
+                }],
+                xAxes: []
+              }
+            }
+        });
+        hideSpinner();
+	  }
+		function updateHourlyRangeChart(json) {
+		  if(ctxHourChartRange) ctxHourChartRange.destroy();
+		  var hourlyList = [];
+		  $.each(json.data, function(i, day) {
+			var current = day['local_time'];
+			var w = current.substr(0,current.lastIndexOf('.'));
+		    var a = new Date(w) ;
+			var hr = a.getHours();
+			hourlyList.push(hr);
+          });
+		  var finalData = _.groupBy(hourlyList, function(hours){
+			return hours;
+		  });
+			console.log(finalData);
+		  var labels = new Array();
+          var data = new Array();
+          $.each(finalData, function(key, val) {
+			var prefix = parseInt(key)>11?'PM':'AM';
+			labels.push(key+prefix);
+            data.push(val.length);
+          });
+         ctxHourChartRange = $("#dateRangeHourlyChart").get(0).getContext("2d");
+         ctxHourChartRange = new Chart(ctxHourChartRange, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                data: data,
+				  label: "Count",
+				  backgroundColor : 'rgb(54, 162, 235)'
+              }]
+              // datasets: [ { data: data } ]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+					  min: 0,
+					  stepSize: 10
+                  }
+                }],
+                xAxes: []
+              }
+            }
+        });
+	  }
+
+	  function updateHourlyChart(json) {
+		  if(chartHourInstance) chartHourInstance.destroy();
+		  var hourlyList = [];
+		  $.each(json.data, function(i, day) {
+			var current = day['local_time'];
+			var w = current.substr(0,current.lastIndexOf('.'));
+		    var a = new Date(w) ;
+			var hr = a.getHours();
+			hourlyList.push(hr);
+          });
+		  var finalData = _.groupBy(hourlyList, function(hours){
+			return hours;
+		  });
+		  var labels = new Array();
+          var data = new Array();
+          $.each(finalData, function(key, val) {
+			  var prefix = parseInt(key)>11?'PM':'AM';
+			labels.push(key+prefix);
+            data.push(val.length);
+          });
+         ctxHourChart = $("#hourlyChart").get(0).getContext("2d");
+         chartHourInstance = new Chart(ctxHourChart, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                data: data,
+				  label: "Count",
+				  backgroundColor : 'rgb(54, 162, 235)'
+              }]
+              // datasets: [ { data: data } ]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+					  min: 0,
+					  stepSize: 10
+                  }
+                }],
+                xAxes: []
+              }
+            }
+        });
+	  }
+      function getTodayURL() {
+		  return used_host + "/api/target/pirmotion/today/" + racknum;
+      }
+	  function getDateRangeURL() {
+		  return used_host + "/api/target/pirmotion/" + racknum;
+      }
+
+      function hideSpinner () {
+        $("i.fa-gear").addClass("hidden-xl-down");
+      }
+
+      function showSpinner () {
+        $("i.fa-gear").removeClass("hidden-xl-down");
+      }
+
+	  function ini() {
+		var t = new Date();
+        $("#endDate").val(getToday());
+        $("#startDate").val(getToday());
+        $("#info").click(function() { $("#details").toggle(100); });
+		var utcDate1 = getToday()+"T00:01:00";
+		var utcDate2 = getToday()+"T23:59:00";
+		$("#range").html(getTidyDate(utcDate1)+"<br> To  <br>"+getTidyDate(utcDate2));
+	  }
+
+      function fetchTodayData() {
+			var utcDate1 = getToday()+"T00:01:00";
+			var utcDate2 = getToday()+"T23:59:00";
+		  	$("#range").html(getTidyDate(utcDate1)+"<br> To  <br>"+getTidyDate(utcDate2));
+			var range = {
+				startDate : utcDate1,
+				endDate : utcDate2
+			}
+        $.ajax({
+          cache : false,
+          type : 'POST',
+          url: getDateRangeURL(),
+          dataType: "json",
+			data: JSON.stringify(range),
+          contentType: 'application/json',
+          xhrFields: {
+            // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+            // This can be used to set the 'withCredentials' property.
+            // Set the value to 'true' if you'd like to pass cookies to the server.
+            // If this is enabled, your server must respond with the header
+            // 'Access-Control-Allow-Credentials: true'.
+            withCredentials: false
+          },
+          headers : {
+            "accept": "application/json",
+          },
+          success: function (data) {
+            console.log(JSON.stringify(data));
+            if(data.err) console.log('Serverside Error');
+            else {
+				updateTodayChart(data);
+				updateHourlyChart(data);
+			}
+          },
+          error: function(data) {
+            console.log("Error");
+            console.log(data);
+          }
+        });
+        return false;
+      }
+
+		function resetData() {
+			showSpinner ();
+			$.ajax({
+			  cache : false,
+			  type : 'DELETE',
+			  url: getTodayURL(),
+			  dataType: "json",
+			  contentType: 'application/json',
+			  xhrFields: {
+				// The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+				// This can be used to set the 'withCredentials' property.
+				// Set the value to 'true' if you'd like to pass cookies to the server.
+				// If this is enabled, your server must respond with the header
+				// 'Access-Control-Allow-Credentials: true'.
+				withCredentials: false
+			  },
+			  headers : {
+				"accept": "application/json",
+			  },
+			  success: function (data) {
+				if(data.err) console.log('Serverside Error');
+				else fetchTodayData(data);
+				  hideSpinner ();
+			  },
+			  error: function(data) {
+				console.log("Error");
+				console.log(data);
+				  hideSpinner ();
+			  }
+			});
+			return false;
+		}
+
+		function fetchDateRange() {
+			var date1 =  $("#startDate").val();
+			var date2 = $("#endDate").val();
+			var utcDate1 = date1+"T00:01:00"//getUtc(date1+"T00:01:00");
+			var utcDate2 = date2+"T23:59:00"//getUtc(date2+"T23:59:00");
+			$("#range").html(getTidyDate(utcDate1)+"<br> To  <br>"+getTidyDate(utcDate2));
+			var range = {
+				startDate : utcDate1,
+				endDate : utcDate2
+			}
+        $.ajax({
+          cache : false,
+          type : 'POST',
+          url: getDateRangeURL(),
+          dataType: "json",
+		  data: JSON.stringify(range),
+          contentType: 'application/json',
+          xhrFields: {
+            // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+            // This can be used to set the 'withCredentials' property.
+            // Set the value to 'true' if you'd like to pass cookies to the server.
+            // If this is enabled, your server must respond with the header
+            // 'Access-Control-Allow-Credentials: true'.
+            withCredentials: false
+          },
+          headers : {
+            "accept": "application/json",
+          },
+          success: function (data) {
+            if(data.err) console.log('Serverside Error');
+            else {
+				updateDateRangeChart(data);
+				updateHourlyRangeChart(data);
+			}
+          },
+          error: function(data) {
+            console.log("Error");
+            console.log(data);
+          }
+        });
+        return false;
+      }
+
+		function addData(chart, label, data) {
+			/*chart.data.labels.push(label);
+			chart.data.datasets.forEach((dataset) => {
+				dataset.data.push(data);
+			});
+			chart.update();
+			console.log("Added Data");*/
+		}
+
+      function getToday() {
+		var today = new Date();
+
+		var year = today.getFullYear();
+
+		var month = today.getMonth()+1;
+		month = (month < 10 ? "0" : '') + month;
+
+		var day = today.getDate();
+		day = (day < 10 ? "0" : '') + day;
+
+		return year + "-" + month + "-" + day;
+	  }
+		function getTodayFormated() {
+			var today = new Date();
+			return luxon.DateTime.local(today).toFormat('yyyy-mm-dd TT');
+		}
+      function getYesterday() {
+		var today = new Date();
+
+		var year = today.getFullYear();
+
+		var month = today.getMonth();
+		month = (month < 10 ? "0" : '') + month;
+
+		var day = today.getDate();
+		day = (day < 10 ? "0" : '') + day;
+
+		return year + "-" + month + "-" + day;
+	  }
+
+		function sanatizeTimeAndFormat(isoDateString) {
+			var san = isoDateString.substr(0,isoDateString.lastIndexOf('.'));
+			var dt = luxon.DateTime.fromISO(san).toFormat('LLL dd, T');
+			return dt;
+		}
+
+		function getTidyDate(isoDateString) {
+			var dt = luxon.DateTime.fromISO(isoDateString);
+			var hr = (dt.hour < 10 ? "0" : '') + dt.hour;
+			var min = (dt.minute < 10 ? "0" : '') + dt.minute;
+			return dt.year+"-"+dt.month+"-"+dt.day+" "+hr+":"+min;
+		}
+	  ini();
+    </script>
+
+  </body>
+</html>

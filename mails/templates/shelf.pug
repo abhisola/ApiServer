@@ -2,7 +2,7 @@ doctype html
 html
   head
     meta(charset='utf-8')
-    title Shelf Email Template
+    title Target Smart Shelf - Out of Stock Alerts from Kellogs
     style.
       .shelf-container {
       width: 100%;
@@ -56,18 +56,16 @@ html
               h3.shelf-title Target Smart Shelf - Out of Stock Alerts from Kellogs
           tr
             td(colspan='3')
-              h4.store-title2 Store: T11756 (119th St, Olathe, KS) | As of: June 14, 2018 1Pm CST
-          
-          tr
-            td(colspan='3')
-              h4.store-name Shelf 1
-          tr.shelf-row
-            td Store: #{name}
-            td
-              ul
-                li 50% Shelf Empty
-                li Shelf Inventory Very Low
-                li Restock Pringles
-            td.img-row
-              .img-container
-                img(src='https://my-rack.s3.amazonaws.com/000004/2018/06/17/0-0830.jpg', alt='Image')
+              h4.store-title2 Store: #{rackname} (#{address}) | As of: #{start} To #{end}
+          each shelf,i in shelves
+            tr
+              td(colspan='3')
+                h4.store-name Shelf #{i+1}
+            tr.shelf-row
+              td= 'Store: '+rackname
+              td
+                ul
+                  li #{shelf.percent}% Shelf Empty
+              td.img-row
+                .img-container
+                  img(src=shelf.url, alt='Image')
