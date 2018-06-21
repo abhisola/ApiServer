@@ -24,7 +24,7 @@ block content
           button.btn.btn-primary(type='submit') View
           i.fa.fa-gear.fa-spin.hidden-xl-down(style='font-size:30px')
         while n < shelf_count
-          div(id='shelf'+(n+1), class='row')
+          div(id='shelf'+n, class='row')
             h3 Shelf #{n+1}
             .col-md-12
               canvas(id='chart'+n,style='width:100%;height:150px;')
