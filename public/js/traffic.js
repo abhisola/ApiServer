@@ -80,10 +80,12 @@
 				 dayList.push(day);
 			 });
 			 var group = [];
+			 
 		     dayList.forEach(day => {   
-				 var newHour = day.hour > 12 ? day.hour;
+				 var newHour = day.hour > 12 ? day.hour - 12 : day.hour;
+				 newHour = newHour==0?12:newHour;
 				 var prefix = day.hour > 11 ? 'PM' : 'AM';
-				 var uniq = day.day + ", " + day.hour + prefix;
+				 var uniq = day.day + ", " + newHour + prefix;
 				 var found = _.find(group, { hour: uniq });
 				 if(found) found.count++;
 				 else group.push({ hour: uniq, count: 1 });
@@ -104,7 +106,6 @@
 		                 label: "Count",
 		                 backgroundColor: 'rgb(54, 162, 235)'
 		             }]
-		             // datasets: [ { data: data } ]
 		         },
 		         options: {
 		             scales: {

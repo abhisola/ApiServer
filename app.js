@@ -40,9 +40,6 @@ app.use('/traffic', trafficRouter);
 app.post('/api/traffic/:_num', function(req,res,next){
   var racknum = req.params['_num'];
   var res_data = req.body;
-  //client.publish('motiondetect/target/'+racknum, JSON.stringify(data));
-  _.forEach(racks, function (rack) {
-      if (racknum == rack.racknum) {
         var data = {
           racknum: rack.racknum,
           time: res_data.time
@@ -56,8 +53,6 @@ app.post('/api/traffic/:_num', function(req,res,next){
           })
         }
         return false;
-      }
-    })
   res.json({err:null,data:req.body});
 })
 // catch 404 and forward to error handler
