@@ -52,9 +52,9 @@ target.addMotionData = function(data, callback) {
     var local_time = DateTime.fromISO(iso).minus({
         hours: 5
     }).toFormat('yyyy-LL-dd TT');
-    console.log("Local Time: "+local_time);
     var querry = "INSERT INTO motion_detect (racknum, date_recorded, time_recorded, local_time)"
                 + " VALUES('"+racknum+"','"+todaysDate+"','"+time+"','"+local_time+"')" ;
+    console.log(querry)
     var client = new Client(settings.database.postgres);
        client.connect();
        client.query(querry, function (err, dbres){

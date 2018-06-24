@@ -41,10 +41,12 @@ app.post('/api/traffic/:_num', function(req,res,next){
   var racknum = req.params['_num'];
   var res_data = req.body;
         var data = {
-          racknum: rack.racknum,
+          racknum: racknum,
           time: res_data.time
         }
-        if (res_data.time > 0) {
+        console.log('Data Recieved: ')
+        console.log(JSON.stringify(data));
+        if (data.time > 0) {
           targetModel.addMotionData(data, function (err, msg) {
             if (err) console.log(err);
             else {
