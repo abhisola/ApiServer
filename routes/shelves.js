@@ -73,9 +73,13 @@ router
     client.end();
   });
 })
-.get('/api/sendreport/yesterday/:_num', function (req, res, next){
+.get('/api/sendreport/pre/yesterday/:_num', function (req, res, next){
     var racknum = req.params['_num'];
   res.redirect('/shelves/api/sendreport/0/' + racknum);
+})
+.get('/api/showreport/pre/yesterday/:_num', function (req, res, next) {
+  var racknum = req.params['_num'];
+  res.redirect('/shelves/api/showreport/0/' + racknum);
 })
 .get('/api/sendreport/:_days/:_num', function(req, res, next){
     var data = req.body;
