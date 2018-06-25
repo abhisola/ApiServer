@@ -90,14 +90,17 @@ router
           client.end();
         });
 })
-.get('/api/sendreport/yesterday/:_num', function (req, res, next) {
+.get('/api/sendreport/:_days/:_num', function (req, res, next) {
   var data = req.body;
   var racknum = req.params['_num'];
-  var start = getDate() + "T00:01:00";
-  var end = getDate() + "T23:59:00";
+  var days = parseInt(req.params['_days']);
+  var start = getDate(days) + "T00:01:00";
+  var end = getDate(days) + "T23:59:00";
   var fetchRack = "SELECT * from racks WHERE racknum='" + racknum + "'";
   var client = new Client(settings.database.postgres);
+  var clientB = new Client(settings.database.postgres);
   client.connect();
+  clientB.connect();
   client.query(fetchRack, function (err, dbres) {
     if (dbres) {
       if (dbres.rowCount > 0) {
@@ -108,7 +111,7 @@ router
           "AND racknum = '" + racknum + "' " +
           "ORDER BY local_time ASC";
         console.log(querry);
-        client.query(querry, function (err, dbresponse) {
+        clientB.query(querry, function (err, dbresponse) {
           if (dbresponse) {
             var format_start = DateTime.fromISO(start).toFormat('LLL dd, HH:mma');
             var format_end = DateTime.fromISO(end).toFormat('LLL dd, HH:mma');
@@ -126,6 +129,7 @@ router
             })
             template_data.dwell_time = sum / template_data.people_count;
             template_data.dwell_time = template_data.dwell_time.toFixed(2);
+            console.log(template_data);
             /*mailer.send({
               from: sent_from,
               to: sent_to, //List of recievers,
@@ -133,7 +137,7 @@ router
               template: 'shelf',
               data: template_data
             })
-            .*/
+            */
             res.render('../mails/templates/traffic', template_data);
           } else {
             res.json({
@@ -142,8 +146,8 @@ router
               data: []
             });
           }
+          clientB.end();
         })
-
       } else {
         res.json({
           success: false,
@@ -162,7 +166,7 @@ router
   })
 })
 ;
-function getDate() {
+function getDate(days = 0) {
   var today = new Date();
 
   var year = today.getFullYear();
@@ -171,7 +175,7 @@ function getDate() {
   month = (month < 10 ? "0" : '') + month;
 
   var day = today.getDate();
-  day = day - 1;
+  day = day - days;
   day = (day < 10 ? "0" : '') + day;
 
   return year + "-" + month + "-" + day;
