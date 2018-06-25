@@ -50,7 +50,8 @@ app.post('/api/traffic/:_num', function(req,res,next){
           targetModel.addMotionData(data, function (err, msg) {
             if (err) console.log(err);
             else {
-              console.log(msg);
+              console.log('Rows Inserted: ')
+              console.log(msg.data.rowCount);
             }
           })
         }
