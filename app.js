@@ -13,7 +13,6 @@ var trafficRouter = require('./routes/traffic');
 var targetModel = require('./models/target');
 
 var settings = require('./settings');
-var racks = require('./racks');
 var app = express();
 
 // view engine setup
@@ -57,7 +56,7 @@ app.post('/api/traffic/:_num', function(req,res,next){
         }
         return false;
   res.json({err:null,data:req.body});
-})
+});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

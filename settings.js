@@ -55,9 +55,10 @@ var settings = {
              },
             from: 'azizahtas@gmail.com',
             to: [
-                'ahtastraders@gmail.com',
+                'sashi7582@gmail.com',
                 'abhishek.solapurkar@itconnectus.com',
-                'sashi7582@gmail.com'
+                //'alerts@mysmartshelf.com',
+                'azizahtas@gmail.com'
             ]
     }
 }
