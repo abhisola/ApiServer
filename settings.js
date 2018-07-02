@@ -57,7 +57,7 @@ var settings = {
             to: [
                 'sashi7582@gmail.com',
                 'abhishek.solapurkar@itconnectus.com',
-                //'alerts@mysmartshelf.com',
+                'alerts@mysmartshelf.com',
                 'azizahtas@gmail.com'
             ]
     }
