@@ -48,87 +48,29 @@ html(lang='en')
         table#storesTable.table
           thead
             tr
-              th VPN / Rack Num
+              th Rack Num
               th Status
               th.sort(style='cursor:pointer;', data-sort='sort-location', data-key='location.address')
                 | Address
               th.sort(style='cursor:pointer;', data-sort='sort-display', data-key='name') Name
               th Actions
           tbody
-            tr.display.table-success
-              td
-                | 01JC
-                br
-                | 000001
-              td Active
-              td
-                a(href='#')
-                  | DG Prototype SmarTRack
-                  br
-                  | 850 Springfield Hwy, Goodlettsville, TN
-                  br
-                  |  USA
-              td
-                a(href='#') DG Prototype SmarTRack
-              td(nowrap='')
-                a.btn.btn-outline-primary.btn-sm(href='shelves/000001', role='button', aria-pressed='true')
-                  i.fa.fa-area-chart
-                a.btn.btn-outline-primary.btn-sm(href='#', role='button', aria-pressed='true')
-                  i.fa.fa-users
-            tr.display.table-success
-              td
-                | 02JV
-                br
-                | 000002
-              td Active
-              td
-                a(href='#')
-                  | ITCUS OFFICE RACK 
-                  br
-                  |  United States
-              td
-                a(href='#') Schaumburg
-              td(nowrap='')
-                a.btn.btn-outline-primary.btn-sm(href='shelves/000002', role='button', aria-pressed='true')
-                  i.fa.fa-area-chart
-                a.btn.btn-outline-primary.btn-sm(href='#', role='button', aria-pressed='true')
-                  i.fa.fa-users
-            tr.display.table-success
-              td
-                | 03JV
-                br
-                | 000003
-              td Active
-              td
-                a(href='#')
-                  | Overland Park 
-                  br
-                  | Blue Valley PKWY, KS
-              td
-                a(href='#') Overland Park 
-              td(nowrap='')
-                a.btn.btn-outline-primary.btn-sm(href='shelves/000003', role='button', aria-pressed='true')
-                  i.fa.fa-area-chart
-                a.btn.btn-outline-primary.btn-sm(href='traffic/000003', role='button', aria-pressed='true')
-                  i.fa.fa-users
-            tr.display.table-success
-              td
-                | 04JV
-                br
-                | 000004
-              td Active
-              td
-                a(href='#')
-                  | Olathe
-                  br
-                  |  W 119TH ST, KS
-              td
-                a(href='#') Olathe
-              td(nowrap='')
-                a.btn.btn-outline-primary.btn-sm(href='shelves/000004', role='button', aria-pressed='true')
-                  i.fa.fa-area-chart
-                a.btn.btn-outline-primary.btn-sm(href='traffic/000004', role='button', aria-pressed='true')
-                  i.fa.fa-users
+            each rack in racks
+              tr.display.table-success
+                td= rack.racknum
+                td Active
+                td
+                  a(href='#')
+                    | #{rack.name}
+                    br
+                    | #{rack.address}
+                td
+                  a(href='#') #{rack.name}
+                td(nowrap='')
+                  a.btn.btn-outline-primary.btn-sm(href='shelves/'+rack.racknum, role='button', aria-pressed='true')
+                    i.fa.fa-area-chart
+                  a.btn.btn-outline-primary.btn-sm(href='traffic/'+rack.racknum, role='button', aria-pressed='true')
+                    i.fa.fa-users
     script(type='text/javascript').
       $(document).ready(function() {
         $("#info").click(function() { $("#details").toggle(100); });
