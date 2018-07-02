@@ -3,69 +3,38 @@ html
   head
     meta(charset='utf-8')
     title Target Smart Shelf - Out of Stock Alerts from Kellogs
-    style.
-      .shelf-container {
-      width: 100%;
-      }
-      .shelf-title {
-      background-color: #e2434b;
-      color: #fff1c1;
-      padding: 10px;
-      }
-      .store-title2 {
-      background-color: #fff7c2;
-      color: #e2434b;
-      padding: 10px;
-      }
-      .store-name {
-      background-color: #f0f3f3;
-      color: #404b69;
-      padding: 10px;
-      }
-      table.shelf {
-      border: dashed #bbbbbb 1.0pt;
-      }
-      table.shelf tr td {
-      border: dashed #bbbbbb 1.0pt;
-      }
-      table.shelf tr.shelf-row td{
-      background-color: #f6f6f6;
-      color: #2d4059;
-      font-weight: 600;
-      padding: 10px;
-      }
-      table.shelf tr.shelf-row td img{
-      width: 100%;
-      height: 100%;
-      }
-      table.shelf tr.shelf-row td div.img-container {
-      width: 332px;
-      max-height: 160px;
-      max-width: 350px;
-      height: 154px;
-      }
-      h3,h4 {
-      margin: 0;
-      }
-  body
-    .shelf-container
-      table.shelf
+  body(style='width: 100%;')
+    br
+    span Team
+    br
+    span See OOS notifications generated from the Smart Shelf in your store. 
+    br
+    br
+    table(style='border: dashed #bbbbbb 1.0pt;')
         tbody
           tr
-            td(colspan='3')
-              h3.shelf-title Target Smart Shelf - Out of Stock Alerts from Kellogs
+            td(colspan='3', style='border: dashed #bbbbbb 1.0pt;')
+              h3(style='background-color: #fe2634; color: #fff9fa; padding: 10px;margin: 0;') Target Smart Shelf – Out of Stock Alerts from Kelloggs
           tr
-            td(colspan='3')
-              h4.store-title2 Store: #{rackname} (#{address}) | As of: #{start} To #{end}
+            td(colspan='3', style='border: dashed #bbbbbb 1.0pt;')
+              h4(style='background-color: #fbe4d5; color: #fe2634; padding: 10px;margin: 0;') Store: #{rackname} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; As of: #{end} CST
           each shelf,i in shelves
             tr
-              td(colspan='3')
-                h4.store-name Shelf #{i+1}
-            tr.shelf-row
-              td= 'Store: '+rackname
-              td
+              td(colspan='3', style='border: dashed #bbbbbb 1.0pt;')
+                h4(style='background-color: #f0f3f3; color: #404b69; padding: 10px;margin: 0;') Shelf #{parseInt(shelf.shelf_num)+1}
+            tr
+              td(style='background-color: #ffffff; color: #2d4059; font-weight: 600; padding: 10px; border: dashed #bbbbbb 1.0pt;')='Store: '+rackname
+              td(style='background-color: #ffffff; color: #2d4059; font-weight: 600; padding: 10px; border: dashed #bbbbbb 1.0pt;')
                 ul
                   li #{shelf.percent}% Shelf Empty
-              td.img-row
-                .img-container
-                  img(src=shelf.url, alt='Image')
+                  li Shelf Inventory #{shelf.invStat}
+              td(style='background-color: #ffffff; color: #2d4059; font-weight: 600; padding: 10px;')
+                div(style='max-width: 350px; max-height:220')
+                  img(src=shelf.url, alt='Image', width='299', height='171')
+    br
+    br
+    span(style='color:#1f497d') Thanks
+    br
+    span(style='color:#1f497d') Kelloggs Smart Shelf Team
+    br
+    br
