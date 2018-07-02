@@ -1,14 +1,3 @@
-		 var racknum = $("#rackNum").val();
-		 var api = {
-		     local: {
-		         host: 'http://192.168.1.105:3001',
-		     },
-		     online: {
-		         host: 'https://smartrackapi.herokuapp.com',
-		     }
-		 }
-
-		 var used_host = api.online.host;
 		 var ctxRange = null;
 		 var chartInstanceRange = null;
 		 var ctxHourChartRange = null;
@@ -26,8 +15,10 @@
 		     var sum = 0;
 		     $.each(json.data, function (i, day) {
 		         var seconds = parseInt(day['time_recorded']);
-		         seconds = seconds > 120 ? 120 : seconds;
-		         labels.push(sanatizeTimeAndFormat(day['local_time']));
+				 seconds = seconds > 120 ? 120 : seconds;
+				 var date = new Date(day['local_time']);
+				 //date.setTime(date.getTime() - date.getTimezoneOffset() * (60 * 1000) * 5);
+		         labels.push(day['local_time']);
 		         data.push(seconds);
 		         count++;
 		         sum += seconds;
@@ -58,7 +49,21 @@
 		                         stepSize: 20
 		                     }
 		                 }],
-		                 xAxes: []
+		                 xAxes: [{
+							 stacked : true,
+							 type: 'time',
+							 distribution : 'series',
+								time : {
+									unit : 'hour',
+									round : 'hour',
+									displayFormats :{ 
+										quarter: 'MMMD h:mmA'
+									}
+								},
+								ticks: {
+									autoSkip : true
+								}
+						 }]
 		             }
 		         }
 		     });
@@ -138,14 +143,11 @@
 		 }
 
 		 function ini() {
-		     var t = new Date();
-		     $("#endDate").val(getToday());
-		     $("#startDate").val(getToday());
+		     $("#endDate").val(getYesterday());
+		     $("#startDate").val(getYesterday());
 		     $("#info").click(function () {
 		         $("#details").toggle(100);
 		     });
-		     var utcDate1 = getToday() + "T00:01:00";
-		     var utcDate2 = getToday() + "T23:59:00";
 		 }
 
 		 function resetData() {
@@ -222,35 +224,6 @@
 		     });
 		     return false;
 		 }
-
-		 function getToday() {
-		     var today = new Date();
-
-		     var year = today.getFullYear();
-
-		     var month = today.getMonth() + 1;
-		     month = (month < 10 ? "0" : '') + month;
-
-		     var day = today.getDate();
-		     day = (day < 10 ? "0" : '') + day;
-
-		     return year + "-" + month + "-" + day;
-		 }
-
-		 function getYesterday() {
-		     var today = new Date();
-
-		     var year = today.getFullYear();
-
-		     var month = today.getMonth();
-		     month = (month < 10 ? "0" : '') + month;
-
-		     var day = today.getDate();
-		     day = (day < 10 ? "0" : '') + day;
-
-		     return year + "-" + month + "-" + day;
-		 }
-
 		 function sanatizeTimeAndFormat(isoDateString) {
 		     var san = isoDateString.replace(' ','T');
 		     var dt = luxon.DateTime.fromISO(san).toFormat('LLL dd, T');

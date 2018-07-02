@@ -130,7 +130,6 @@ charts = [];
           images: images
         }]
       },
-
       options: {
         tooltips: {
           enabled: false,
@@ -147,7 +146,7 @@ charts = [];
             },
             scaleLabel: {
               display: true,
-              labelString: 'percent full'
+              labelString: 'Percent Full'
             }
           }],
           xAxes: [/*{
@@ -173,8 +172,7 @@ charts.push(chart);
 }
 
 function getURL() {
-  return "https://smartrackapi.herokuapp.com/shelves/api/range/"+$("#rackNum").val();
-  //return "http://localhost:3001/shelves/api/range/" + $("#rackNum").val();
+  return used_host + "/shelves/api/range/" + $("#rackNum").val();
 }
 
 function hideSpinner () {
@@ -223,18 +221,14 @@ function fetchData(event) {
   return false;
 }
 
-function sanatizeTimeAndFormat(isoDateString) {
-  var san = isoDateString.substr(0,isoDateString.lastIndexOf('.'));
-  var dt = luxon.DateTime.fromISO(san).toFormat('LLLdd, hh:mma');
-  return dt;
-}
-
-$(document).ready(function () {
-  var today = new Date();
-  $("#startDate").val($.format.date(today, 'yyyy-MM-dd'));
-  $("#endDate").val($.format.date(today, 'yyyy-MM-dd'));
-  $("#vsv").submit(fetchData);
+function ini() {
+  $("#endDate").val(getYesterday());
+  $("#startDate").val(getYesterday());
   $("#info").click(function () {
     $("#details").toggle(100);
   });
+}
+$(document).ready(function () {
+  ini();
+  $("#vsv").submit(fetchData);
 });
