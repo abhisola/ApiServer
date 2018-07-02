@@ -2,7 +2,6 @@ var { Pool, Client } = require('pg');
 var _ = require('lodash');
 var target = {};
 var settings = require('../settings');
-var racks = require('../racks');
 var { DateTime } = require('luxon');
 
 target.addData = function(data, callback) {

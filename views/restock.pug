@@ -3,7 +3,7 @@ block content
     - var n = 0;
     .starter-template
       if success
-        h1 Shelves - #{rackname} (#{address})
+        h1 Restock - #{name} (#{address})
         p.lead
           | To start your visit, select a date range below.
           a#info(href='#')
@@ -23,7 +23,7 @@ block content
             input#endDate.form-control(type='date', value='2017-01-23')
           button.btn.btn-primary(type='submit') View
           i.fa.fa-gear.fa-spin.hidden-xl-down(style='font-size:30px')
-        while n < shelf_count
+        while n < shelves
           div(id='shelf'+n, class='row')
             h3 Shelf #{n+1}
             .col-md-12
@@ -32,4 +32,4 @@ block content
       else
         h1="We are sorry, "+msg
 block append scripts
-  script(src='/js/allcharts.js')
+  script(src='/js/restock.js')
