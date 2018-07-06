@@ -124,6 +124,7 @@ function fetchData(event) {
 }
 
 function updateTextData(data) {
+    $('ul#restock_text').empty();
     data.data.forEach(row => {
         var text = "Shelf " + (parseInt(row.shelf_num) + 1) + ": Restocked " + sanatizeTimeAndFormat2(row.to_date) + ". Response Time: " + row.hours + " h";
         $('ul#restock_text').append('<li><h2>'+text+'</h2></li>');
