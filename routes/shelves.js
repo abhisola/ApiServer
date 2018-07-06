@@ -283,7 +283,7 @@ router
       var start = getDate(days) + "T00:01:00";
       var end = getDate(days) + "T23:59:00";
       var fetchRack = "SELECT * from racks ORDER BY racknum ASC";
-      var fetchShelves = "SELECT racknum,shelf_num,ROUND(percent_full*100,2) AS percent,date_recorded,url FROM shelf_stock " +
+      var fetchShelves = "SELECT racknum,shelf_num,ROUND(percent_full*100,2) AS percent,date_recorded::text,url FROM shelf_stock " +
         "WHERE date_recorded > $1 AND  date_recorded < $2 " +
         "AND racknum = $3 AND shelf_num = $4" +
         "ORDER BY shelf_num ASC, date_recorded ASC";
@@ -310,6 +310,8 @@ router
                   let sold = initial.percent - point.percent; // Sold
                  /* console.log('Restock: '+restock);
                   console.log('Sold: '+sold);*/
+                  let temp_from = initial.date_recorded;
+                  let temp_to = point.date_recorded;
                   let dt = {
                     rack: initial.racknum,
                     shelf: initial.shelf_num,
@@ -318,7 +320,7 @@ router
                   };
                   if (restock > 0 && restock > thresh) {
                     //console.log('*** Inside Restock ***');
-                    let diff_ms = new Date(point.date_recorded).getTime() - new Date(initial.date_recorded).getTime();
+                    let diff_ms = new Date(temp_to).getTime() - new Date(temp_from).getTime();
                     let hour = diff_ms / (1000 * 60 * 60);
                     dt.isRestock = true;
                     dt.to_date = point.date_recorded;
@@ -329,7 +331,7 @@ router
                   }
                   if(sold > 0 && sold > thresh) {
                     //console.log('*** Inside Sold ***');
-                    let diff_ms = new Date(point.date_recorded).getTime() - new Date(initial.date_recorded).getTime();
+                    let diff_ms = new Date(temp_to).getTime() - new Date(temp_from).getTime();
                     let hour = diff_ms / (1000 * 60 * 60);
                     dt.isRestock = false;
                     dt.to_date = point.date_recorded;

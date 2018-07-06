@@ -44,3 +44,8 @@ function sanatizeTimeAndFormat(isoDateString) {
     var dt = luxon.DateTime.fromISO(san).toFormat('LLLdd, hh:mma');
     return dt;
 }
+function sanatizeTimeAndFormat2(isoDateString) {
+    var san = isoDateString.substr(0, isoDateString.lastIndexOf('.'));
+    var dt = luxon.DateTime.fromISO(san).toFormat('LLL dd, hh:mma');
+    return dt;
+}

@@ -30,7 +30,7 @@ function updateRestockShelf(resjson) {
         });
         var ctx_data = $("#chart" + shelf).get(0).getContext("2d");
         var chart = new Chart(ctx_data, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
                 labels: labels,
                 datasets: [{
@@ -53,17 +53,7 @@ function updateRestockShelf(resjson) {
                             labelString: 'Hours To Restock'
                         }
                     }],
-                    xAxes: [
-                        /*{
-                                    type: 'time',
-                                    unit: 'day',
-                                    time: {
-                                      displayFormats: {
-                                        'day': 'MMM DD'
-                                      }
-                                    }
-                                  }*/
-                    ]
+                    xAxes: []
                 }
             }
         });
@@ -122,6 +112,7 @@ function fetchData(event) {
             if (data.err) console.log('Serverside Error');
             else {
                 updateRestockShelf(data);
+                updateTextData(data);
             }
         },
         error: function (data) {
@@ -132,6 +123,12 @@ function fetchData(event) {
     return false;
 }
 
+function updateTextData(data) {
+    data.data.forEach(row => {
+        var text = "Shelf " + (parseInt(row.shelf_num) + 1) + ": Restocked " + sanatizeTimeAndFormat2(row.to_date) + ". Response Time: " + row.hours + " h";
+        $('ul#restock_text').append('<li><h2>'+text+'</h2></li>');
+    });
+}
 function ini() {
     $("#endDate").val(getYesterday());
     $("#startDate").val(getYesterday());
