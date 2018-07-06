@@ -42,7 +42,8 @@ function updateRestockShelf(resjson) {
 
             options: {
                 scales: {
-                    yAxes: [{
+                    yAxes: [],
+                    xAxes: [{
                         ticks: {
                             max: 24,
                             min: 0,
@@ -52,8 +53,7 @@ function updateRestockShelf(resjson) {
                             display: true,
                             labelString: 'Hours To Restock'
                         }
-                    }],
-                    xAxes: []
+                    }]
                 }
             }
         });
