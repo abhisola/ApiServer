@@ -293,16 +293,23 @@ router
         var data = [];
         const dbresRacks = await pool.query(fetchRack)
         for (let rack of dbresRacks.rows) {
+          console.log('RackNum: '+rack.racknum);
           for(j=0;j<rack.shelves;j++) {
             const dbresShelves = await pool.query(fetchShelves, [start, end, rack.racknum, j]);
             let dbrows = dbresShelves.rows;
+            //console.log('Shelf: ' + JSON.stringify(dbrows));
             if (dbresShelves.rowCount > 0) {
               let initial = dbrows[0];
               for (i = 0; i < dbrows.length; i++) {
                 let point = dbrows[i];
+                /*console.log('****** Looping *** ***');
+                console.log('Comparing -> Initial: '+JSON.stringify(initial));
+                console.log('With -> Point: '+JSON.stringify(point));*/
                 if(point) {
                   let restock = point.percent - initial.percent; // Restock
                   let sold = initial.percent - point.percent; // Sold
+                 /* console.log('Restock: '+restock);
+                  console.log('Sold: '+sold);*/
                   let dt = {
                     rack: initial.racknum,
                     shelf: initial.shelf_num,
@@ -310,6 +317,7 @@ router
                     from_per: parseFloat(initial.percent)
                   };
                   if (restock > 0 && restock > thresh) {
+                    //console.log('*** Inside Restock ***');
                     let diff_ms = new Date(point.date_recorded).getTime() - new Date(initial.date_recorded).getTime();
                     let hour = diff_ms / (1000 * 60 * 60);
                     dt.isRestock = true;
@@ -320,6 +328,7 @@ router
                     initial = point;
                   }
                   if(sold > 0 && sold > thresh) {
+                    //console.log('*** Inside Sold ***');
                     let diff_ms = new Date(point.date_recorded).getTime() - new Date(initial.date_recorded).getTime();
                     let hour = diff_ms / (1000 * 60 * 60);
                     dt.isRestock = false;
@@ -329,21 +338,36 @@ router
                     data.push(dt);
                     initial = point;
                   }
+                  if(point.percent < initial.percent) {
+                    initial = point;
+                  }
+                  //console.log('Data Status: '+JSON.stringify(data));
+                  //console.log();
                 }
               }
             }
           }
+          //console.log();
+          //console.log();
         }
         var addToRestock = 'INSERT INTO restock ("racknum", "shelf_num", "from_date", "to_date", "from_percent", "to_percent", "hours", "isrestock") VALUES($1,$2,$3,$4,$5,$6,$7,$8)'
+        var isDuplicate = 'Select * from restock WHERE racknum=$1 AND shelf_num=$2 AND from_date=$3 AND to_date=$4 AND from_percent=$5 '+
+        'AND to_percent=$6 AND hours=$7 AND isrestock=$8'
         console.log(data);
         var executed = [];
+        var duplicate = [];
         for(let row of data) {
-          const q = await pool.query(addToRestock,[row.rack,row.shelf,row.from_date,row.to_date,row.from_per,row.to_per,row.hours, row.isRestock]);
-          row.rowsAdded = q.rowCount;
-          executed.push(row);
+          const dup = await pool.query(isDuplicate, [row.rack, row.shelf, row.from_date, row.to_date, row.from_per, row.to_per, row.hours, row.isRestock]);
+          if(dup.rowCount > 0) {
+            duplicate.push(row);
+          } else {
+            const q = await pool.query(addToRestock, [row.rack, row.shelf, row.from_date, row.to_date, row.from_per, row.to_per, row.hours, row.isRestock]);
+            row.rowsAdded = q.rowCount;
+            executed.push(row);
+          }
         }
         pool.end()
-        res.json({success:true,msg:'Restock Response Processed Successfully for '+start, data:executed});
+        res.json({success:true,msg:'Restock Response Processed Successfully for '+start, data:{duplicate: duplicate, executed: executed}});
       })().catch(e => setImmediate(() => {console.error(e);}))
 })
 .get('/restock/:_num', function (req,res,next) {
@@ -375,9 +399,9 @@ router
   var end = resData.endDate;
   var fetchRack = "SELECT * from racks WHERE racknum=$1";
   var fetchRestockData = "SELECT shelf_num,to_date,hours,isrestock "+
-  "FROM restock WHERE racknum=$1 AND to_date >= $2 AND to_date <= $3 AND isrestock ORDER BY shelf_num ASC"
+  "FROM restock WHERE racknum=$1 AND to_date >= $2 AND to_date <= $3 ORDER BY shelf_num ASC"
     var query = "SELECT shelf_num,to_date,hours,isrestock " +
-      "FROM restock WHERE racknum='"+racknum+"' AND to_date >= '"+start+"' AND to_date <= '"+end+"' AND isrestock ORDER BY shelf_num ASC"
+      "FROM restock WHERE racknum='"+racknum+"' AND to_date >= '"+start+"' AND to_date <= '"+end+"' ORDER BY shelf_num ASC"
       console.log(query);
   const pool = new Pool(settings.database.postgres);
   var template_data = {
