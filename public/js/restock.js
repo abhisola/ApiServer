@@ -28,7 +28,8 @@ function updateRestockShelf(resjson) {
             labels.push(sanatizeTimeAndFormat(report['to_date']));
             data.push(parseFloat(report['hours']).toFixed(2));
         });
-        var ctx_data = $("#chart" + shelf).get(0).getContext("2d");
+        var canva = $("#chart" + shelf);
+        var ctx_data = canva.get(0).getContext("2d");
         var chart = new Chart(ctx_data, {
             type: 'horizontalBar',
             data: {
@@ -39,8 +40,9 @@ function updateRestockShelf(resjson) {
                     borderColor: "#A10054",
                 }]
             },
-
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [],
                     xAxes: [{
@@ -54,6 +56,15 @@ function updateRestockShelf(resjson) {
                             labelString: 'Hours To Restock'
                         }
                     }]
+                }
+            },
+            mounted() {
+                    this.renderChart(this.renderData, this.renderOptions);
+                },
+            watch: {
+                chartData() {
+                    this.renderOptions.maintainAspectRatio = true;
+                    this.renderChart(this.renderData, this.renderOptions);
                 }
             }
         });

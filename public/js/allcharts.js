@@ -131,6 +131,8 @@ charts = [];
         }]
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         tooltips: {
           enabled: false,
           mode: 'index',
@@ -158,7 +160,16 @@ charts = [];
               }
             }
           }*/]
-        }
+        },
+        mounted() {
+            this.renderChart(this.renderData, this.renderOptions);
+          },
+          watch: {
+            chartData() {
+              this.renderOptions.maintainAspectRatio = true;
+              this.renderChart(this.renderData, this.renderOptions);
+            }
+          }
       }
     });
 charts.push(chart);
