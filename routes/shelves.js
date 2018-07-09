@@ -401,9 +401,9 @@ router
   var end = resData.endDate;
   var fetchRack = "SELECT * from racks WHERE racknum=$1";
   var fetchRestockData = "SELECT shelf_num,to_date,hours,isrestock "+
-  "FROM restock WHERE racknum=$1 AND to_date >= $2 AND to_date <= $3 ORDER BY shelf_num ASC"
+  "FROM restock WHERE racknum=$1 AND to_date >= $2 AND to_date <= $3 AND isrestock ORDER BY shelf_num ASC"
     var query = "SELECT shelf_num,to_date,hours,isrestock " +
-      "FROM restock WHERE racknum='"+racknum+"' AND to_date >= '"+start+"' AND to_date <= '"+end+"' ORDER BY shelf_num ASC, to_date DESC"
+      "FROM restock WHERE racknum='" + racknum + "' AND to_date >= '" + start + "' AND to_date <= '" + end + "' AND isrestock ORDER BY shelf_num ASC, to_date DESC"
       console.log(query);
   const pool = new Pool(settings.database.postgres);
   var template_data = {
