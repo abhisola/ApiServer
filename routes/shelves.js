@@ -226,11 +226,11 @@ router
                  url: row.url,
                  invStat: ""
                }
-                if (shelf.percent > 15 && shelf.percent <= 39) {
+                /*if (shelf.percent > 15 && shelf.percent <= 39) {
                   shelf.invStat = "Low";
                   shelf.percent = 25;
                   template_data.shelves.push(shelf);
-                } else if (shelf.percent >= 40 && shelf.percent <= 65) {
+                } else */if (shelf.percent >= 40 && shelf.percent <= 65) {
                   shelf.invStat = "Very Low";
                   shelf.percent = 50;
                   template_data.shelves.push(shelf);
