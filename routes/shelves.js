@@ -316,7 +316,9 @@ router
                     rack: initial.racknum,
                     shelf: initial.shelf_num,
                     from_date : initial.date_recorded,
-                    from_per: parseFloat(initial.percent)
+                    from_per: parseFloat(initial.percent),
+                    from_url: initial.url,
+                    to_url: point.url
                   };
                   if (restock > 0 && restock > thresh) {
                     //console.log('*** Inside Restock ***');
@@ -429,6 +431,48 @@ router
     pool.end()
     //res.json({success:true,msg:'Restock Response Processed Successfully for '+start, data:[]});
   })().catch(e => setImmediate(() => {console.error(e);}))
+})
+.get('/restock/response/dashboard', function(req, res, next){
+  var fetchRack = "SELECT * from racks ORDER BY racknum DESC";
+  const pool = new Pool(settings.database.postgres);
+  (async () => {
+      const dbresRacks = await pool.query(fetchRack);
+      var data = {};
+      data.racks = dbresRacks.rows;
+      data.title = "Response Board";
+      res.render('response_board', data);
+    pool.end()
+  })().catch(e => setImmediate(() => {
+    console.error(e);
+  }))
+})
+.post('/api/restock/response', function (req, res, next) {
+  var resData = req.body;
+  var start = resData.startDate;
+  var end = resData.endDate;
+  var hours = resData.hours;
+  var percent = (100 - resData.percent);
+  var fetchResponseData = "select * from restock where from_date > $1 and from_date < $2 and hours > $3 and from_percent < $4 and isrestock";
+  const pool = new Pool(settings.database.postgres);
+  (async () => {
+    const dbResponse = await pool.query(fetchResponseData, [start, end, hours, percent]);
+    var output = _.groupBy(dbResponse.rows, function (b) {
+      return b.racknum;
+    });
+    console.log(dbResponse);
+    if (dbResponse.rowCount > 0) {
+      res.json({
+        success: true,
+        msg: 'Found data',
+        data: output
+      });
+    }
+    else {
+      res.json({ success: false, msg: 'Nothing Found!', data: [] });
+    }
+    pool.end()
+    //res.json({success:true,msg:'Restock Response Processed Successfully for '+start, data:[]});
+  })().catch(e => setImmediate(() => { console.error(e); }))
 })
 ;
 function getDate(days) {

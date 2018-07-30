@@ -21,7 +21,7 @@ html
         button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#navbarTop', aria-controls='navbarTop', aria-expanded='false', aria-label='Toggle navigation')
         span.navbar-toggler-icon
         a.navbar-brand(href='#')
-        img(src='/images/logo-red.svg', alt='SmartRack.io')
+        img(src='', alt='SmartRack.io')
         #navbarTop.collapse.navbar-collapse
         ul.navbar-nav.mr-auto
             li.nav-item
@@ -30,6 +30,8 @@ html
             a.nav-link(href='/shelves/'+racknum) Shelf
             li.nav-item
             a.nav-link(href='/traffic/'+racknum) Traffic
+            li.nav-item
+            a.nav-link(href='/shelves/restock/response/dashboard/') Response
     .container
         block content
 
@@ -44,4 +46,3 @@ html
       script(src='/js/luxon.min.js')
       script(src='/js/lodash.min.js')
       script(src='/js/utils.js')
-
