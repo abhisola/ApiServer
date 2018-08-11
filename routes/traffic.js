@@ -51,7 +51,7 @@ router
       var dateString = today.getFullYear() + "-" + (today.getMonth()+1) +"-"+ today.getDate();
       var racknum = req.params['_num'];
         var querry = "DELETE FROM motion_detect " + 
-                    "WHERE local_time > '" + dateString + "' AND racknum = '" + racknum + "' ";
+                    "WHERE local_time >= '" + dateString + "' AND racknum = '" + racknum + "' ";
       console.log(querry);
       var client = new Client(settings.database.postgres);
         client.connect();
@@ -73,7 +73,7 @@ router
       var start = data.startDate;
       var end = data.endDate;
         var querry = "SELECT racknum,date_recorded::text,time_recorded,local_time::text FROM motion_detect " +
-                    "WHERE local_time > '" + start + "' AND  local_time < '" + end + "' " +
+                    "WHERE local_time >= '" + start + "' AND  local_time <= '" + end + "' " +
                     "AND racknum = '"+racknum+"' " + 
                     "ORDER BY local_time ASC";
       console.log(querry);
@@ -94,7 +94,7 @@ router
   var data = req.body;
   var racknum = req.params['_num'];
   var days = parseInt(req.params['_days']);
-  var start = getDate(days) + "T00:01:00";
+  var start = getDate(days) + "T00:00:00";
   var end = getDate(days) + "T23:59:00";
   var fetchRack = "SELECT * from racks WHERE racknum='" + racknum + "'";
   var client = new Client(settings.database.postgres);
@@ -107,7 +107,7 @@ router
         var rack = dbres.rows[0];
         console.log(rack);
         var querry = "SELECT racknum,date_recorded,time_recorded,local_time FROM motion_detect " +
-          "WHERE local_time > '" + start + "' AND  local_time < '" + end + "' " +
+          "WHERE local_time >= '" + start + "' AND  local_time <= '" + end + "' " +
           "AND racknum = '" + racknum + "' " +
           "ORDER BY local_time ASC";
         console.log(querry);
