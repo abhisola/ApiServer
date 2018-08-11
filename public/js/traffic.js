@@ -186,7 +186,7 @@
 		 function fetchDateRange() {
 		     var date1 = $("#startDate").val();
 		     var date2 = $("#endDate").val();
-		     var utcDate1 = date1 + "T00:01:00"
+		     var utcDate1 = date1 + "T00:00:00"
 		     var utcDate2 = date2 + "T23:59:00"
 		     var range = {
 		         startDate: utcDate1,

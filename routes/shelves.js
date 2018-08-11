@@ -55,7 +55,7 @@ router
   var end = data.endDate;
 
   var querry = "SELECT racknum,shelf_num,percent_full*100 AS percent,date_recorded,url FROM shelf_stock " +
-    "WHERE date_recorded > '" + start + "' AND  date_recorded < '" + end + "' " +
+    "WHERE date_recorded >= '" + start + "' AND  date_recorded <= '" + end + "' " +
           "AND racknum = '"+racknum+"' " +
           "ORDER BY date_recorded ASC";
   console.log(querry);

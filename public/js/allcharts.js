@@ -198,7 +198,7 @@ function fetchData(event) {
   event.preventDefault();
   showSpinner();
   $("canvas").empty();
-  var start = $("#startDate").val()+"T00:01:00";
+  var start = $("#startDate").val()+"T00:00:00";
   var end = $("#endDate").val()+"T23:59:00";
   var arr = { startDate: start, endDate: end };
   $.ajax({
