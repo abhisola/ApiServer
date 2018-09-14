@@ -1,13 +1,8 @@
 
 // configure charts
-var myvid ;
-var myvids = [];
-var activeVideo = 0;
-
-var video_dom_list = [];
-var video_url_list = [];
-var active_vidlist = [];
-
+var video_list = {};
+var pager = {};
+var track = 3;
 function getDateRangeURL() {
     return used_host + "/timelapse/api/" + racknum;
 }
@@ -28,16 +23,26 @@ function ini() {
     });
 }
 
-function playVideos(json){
-    var videos = $('myvideos');
-    var top = "<col-md-12>"
-    var bottom = "</col-md-12>"
+function inilialize(json){
+
+    video_list = {};
+    var videos = $('#videos');
     var obj_keys = Object.keys(json)
     for (j = 0; j < obj_keys.length; j++) {
         var shelf = Object.keys(json)[j];
-        var video = "<video src='', id='shelf" + shelf + "', width='100%', height='600' controls='', style='background:black'></video>"
-        videos.html(top + video + bottom);
-        var vid_dom = $('shelf' + shelf);
+        video_list.urls = json[shelf];d
+        video_list.page = 0;
+        video_list.paged_url = [];
+        video_list.shelf = shelf;
+        var video_top = "<div class='row'><div class='col-md-12 video-title' style='margin-bottom:20px;'><h2>Timelapse For Shelf "+(Number(shelf)+1)+"</h2></div>"
+        var back_button =  "<div class='col-md-1'> <a  onclick='pagenator("+shelf+", true)'><img src='/images/back.jpg' ></a> </div>"
+        var video_1 = "<div class='col-md-3 video-container'> <video src='', id='1_shelf" + shelf + "', controls='', style='background:black'></video> </div> "
+        var video_2 = "<div class='col-md-3 video-container'> <video src='', id='2_shelf" + shelf + "', controls='', style='background:black'></video> </div> "
+        var video_3 = "<div class='col-md-3 video-container'> <video src='', id='3_shelf" + shelf + "', controls='', style='background:black'></video> </div> "
+        var next_button =  "<div class='col-md-1'> <a onclick='pagenator("+shelf+", false)'><img src='/images/next.jpg'></a> </div>"
+        var video_bottom = "</div>"
+        videos.append(video_top + back_button + video_1 + video_2 + video_3 + next_button + video_bottom);
+        /*var vid_dom = $('shelf' + shelf);
         vid_dom.bind('ended', function (e) {
             activeVideo = (++activeVideo) % myvids.length;
             // update the video source and play
@@ -47,15 +52,20 @@ function playVideos(json){
         video_dom_list.push(vid_dom);
         $.each(json[shelf], function (k, row) {
             if(shelf == 0) myvids.push(row['url'])
-        })
+        })*/
     }
-    console.log(myvids)
-    if (myvid.length > 0) {
-        myvid.get(0).src = myvids[activeVideo];
-        myvid.get(0).play();
-    } else {
-        
-    }
+    console.log(video_list);
+    console.log(video_list.urls);
+}
+function pagenator(key, back) {
+    var shelf = video_list[key];
+    video_list[key].paged_urls = [];
+    var current_page = shelf.page;
+    var from = track * current_page;
+    if(back) shelf.page -= current_page;
+    else shelf.page += current_page;
+    console.log("Shelf: ");
+    console.log(shelf);
 }
 function fetchDateRange() {
     var date1 = $("#startDate").val();
@@ -85,7 +95,8 @@ function fetchDateRange() {
         success: function (data) {
             if (data.err) console.log('Serverside Error');
             else {
-                playVideos(data.data);
+                inilialize(data.data);
+                console.log(data);
             }
         },
         error: function (data) {

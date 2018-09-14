@@ -69,6 +69,18 @@ li.media {
   margin-top: 20px;
 }
 
+.video-title {
+  background-color: #e8e8e8;
+  padding: 10px;
+  color: #c12929;  
+  margin-top: 20px;
+}
+
+.video-container {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 .traffic-box {
   border: 1px solid rgba(0, 0, 0, .15);
   padding: 21px;
