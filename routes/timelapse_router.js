@@ -49,7 +49,7 @@ router
       var racknum = req.params['_num'];
       var start = data.startDate;
       var end = data.endDate;
-      var querry = "SELECT url, shelf FROM timelapse " +
+      var querry = "SELECT url, shelf, date_recorded FROM timelapse " +
                     "WHERE date_recorded >= '" + start + "' AND  date_recorded <= '" + end + "' " +
                     "AND racknum = '"+racknum+"' " + 
                     "ORDER BY shelf ASC";
