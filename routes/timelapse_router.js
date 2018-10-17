@@ -53,23 +53,15 @@ router
                     "WHERE date_recorded >= '" + start + "' AND  date_recorded <= '" + end + "' " +
                     "AND racknum = '"+racknum+"' " + 
                     "ORDER BY shelf ASC, date_recorded ASC";
-      console.log(querry);
       var client = new Client(settings.database.postgres);
         client.connect();
         
         client.query(querry, function (err, dbres){
           if(dbres) {
             var output = dbres.rows;
-            var arr = [];
-            /*output.forEach(row => {
-              arr.push({url: row.url, shelf: row.shelf})
-            });*/
-            console.log(arr)
             var data_sorted = _.groupBy(output, function (b) {
               return b.shelf;
             });
-            console.log(data_sorted)
-
             res.json({
               err: null,
               data: data_sorted
