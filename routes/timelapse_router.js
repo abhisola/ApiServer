@@ -52,7 +52,7 @@ router
       var querry = "SELECT url, shelf, date_recorded FROM timelapse " +
                     "WHERE date_recorded >= '" + start + "' AND  date_recorded <= '" + end + "' " +
                     "AND racknum = '"+racknum+"' " + 
-                    "ORDER BY shelf ASC";
+                    "ORDER BY shelf ASC, date_recorded ASC";
       console.log(querry);
       var client = new Client(settings.database.postgres);
         client.connect();
