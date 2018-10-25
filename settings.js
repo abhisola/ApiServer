@@ -48,12 +48,15 @@ var settings = {
         }
     },
     mail : {
-         service: 'gmail',
+         service: 'Godaddy',
+         host: "smtpout.secureserver.net",
+         secureConnection: true,
+         port: 465,
              auth: {
-                 user: 'ahtastraders@gmail.com',
-                 pass: '09403080450'
+                 user: 'alerts@mysmartshelf.com',
+                 pass: 'R@jn33sh'
              },
-            from: 'azizahtas@gmail.com',
+            from: 'alerts@mysmartshelf.com',
             to: [
                 'sashi7582@gmail.com',
                 'abhishek.solapurkar@itconnectus.com',
