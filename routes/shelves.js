@@ -8,7 +8,10 @@ var { DateTime } = require('luxon');
 
 mailer.init({
   service: settings.mail.service,
-  auth: settings.mail.auth
+  auth: settings.mail.auth,
+  host: settings.mail.host,
+  secure: settings.mail.secureConnection,
+  port: settings.mail.port
 });
 var sent_from = settings.mail.from;
 var sent_to = settings.mail.to;
@@ -182,7 +185,7 @@ router
       }
       client.end();
     });
-    
+
 })
 .get('/api/showreport/:_days/:_num', function (req, res, next) {
   var racknum = req.params['_num'];
@@ -289,7 +292,7 @@ router
         "ORDER BY shelf_num ASC, date_recorded ASC";
       const pool = new Pool(settings.database.postgres);
       const thresh = 25;
-      (async () => { 
+      (async () => {
         var data = [];
         const dbresRacks = await pool.query(fetchRack)
         for (let rack of dbresRacks.rows) {
