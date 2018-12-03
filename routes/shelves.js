@@ -37,6 +37,7 @@ router
               data.rackname = rack.name;
               data.address = rack.address;
               data.shelf_count = rack.shelves;
+              data.timezone = rack.time_zone;
               data.success = true;
             } else {
               data.racknum = racknum;
