@@ -5,7 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var _ = require('lodash');
-
+var { Pool, Client } = require('pg');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var shelvesRouter = require('./routes/shelves');
@@ -45,19 +45,31 @@ app.post('/api/traffic/:_num', function(req,res,next){
           racknum: racknum,
           time: res_data.time
         }
-        console.log('Data Recieved: ')
-        console.log(JSON.stringify(data));
-        if (data.time > 0) {
-          targetModel.addMotionData(data, function (err, msg) {
-            if (err) console.log(err);
-            else {
-              console.log('Rows Inserted: ')
-              console.log(msg.data.rowCount);
-            }
-          })
-        }
-        return false;
-  res.json({err:null,data:req.body});
+        var fetch_time_diff = "select * from racks where racknum=$1 limit 1"
+        const pool = new Pool(settings.database.postgres);
+        (async () => {
+          var racks = await pool.query(fetch_time_diff, [racknum]);
+          const row = racks.rowCount>0?racks.rows[0]:null;
+          if(row) {
+            data.time_diff = row.time_diff;
+          } else {
+            data.time_diff = 0;
+          }
+          console.log('Data Recieved: ')
+          console.log(JSON.stringify(data));
+          if (data.time > 0) {
+            targetModel.addMotionData(data, function (err, msg) {
+              if (err) console.log(err);
+              else {
+                console.log('Rows Inserted: ')
+                console.log(msg.data.rowCount);
+              }
+            })
+          }
+          return false;
+          res.json({err:null,data:req.body});
+        })().catch(e => setImmediate(() => {console.error(e);}))
+        
 });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

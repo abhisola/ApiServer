@@ -56,9 +56,9 @@ html(lang='en')
               th Actions
           tbody
             each rack in racks
-              tr.display.table-success
+              tr.display(class=rack.active==null?'table-warning':rack.active?'table-success':'table-danger')
                 td= rack.racknum
-                td Active
+                td= ((rack.active?'Active':'Inactive') + (rack.status==null?'':': '+rack.status))
                 td
                   a(href='#')
                     | #{rack.name}

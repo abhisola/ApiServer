@@ -3,13 +3,18 @@ extends layout.pug
 block content
     .starter-template
         if success
-            h1 Foot Traffic - #{rackname} (#{address})
+            h2 Foot Traffic For #{rackname}
+                span(style='font-size:24px; font-weight:900') #{' ('+address})
             p.lead
                 | To view audience, select a rack and date range below.
                 a#info(href='#')
                 i.fa.fa-info-circle(style='font-size:24px')
             p#details(style='display:none;')
                 | The smart shelf passively collects wifi device data, and extrapolates for total audience based on the number of devices seen. Additional analytics, like return rate, store crossover, and linger time, are also available.
+            p.lead
+                | Showing in 
+                span(style='color: red; font-weight:600;') #{timezone} 
+                | timezone.
             form.form-inline
                 .form-group
                 input#rackNum(type='hidden', value=racknum)

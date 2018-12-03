@@ -3,7 +3,8 @@ block content
     - var n = 0;
     .starter-template
       if success
-        h1 Shelves - #{rackname} (#{address})
+        h2 Shelf Report For #{rackname}
+          span(style='font-size:24px; font-weight:900') #{' ('+address})
         p.lead
           | To start your visit, select a date range below.
           a#info(href='#')
@@ -13,6 +14,10 @@ block content
             | Cameras on of each shelf of the Smart Rack take photos several times a day and then analyzed by an algorithm to count the number of triangles visible. These counts are expressed as a % full in the chart for each shelf.
           p
             | Photos from intervals from the time period selected are displayed below each shelf.
+        p.lead
+          | Showing in 
+          span(style='color: red; font-weight:600;') #{timezone} 
+          | timezone.
         form#vsv.form-inline
           input#rackNum(type='hidden', value=racknum)
           .form-group

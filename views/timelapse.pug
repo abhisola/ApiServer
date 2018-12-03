@@ -3,7 +3,8 @@ extends layout.pug
 block content
     .starter-template
         if success
-            h1 Timelapse - #{rackname} (#{address})
+            h2 Timelapse For #{rackname}
+                span(style='font-size:24px; font-weight:900') #{' ('+address})
             p.lead
                 | To view audience, select a rack and date range below.
                 a#info(href='#')

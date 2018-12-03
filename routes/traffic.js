@@ -33,6 +33,7 @@ router
            data.rackname = rack.name;
            data.address = rack.address;
            data.success = true;
+           data.timezone = rack.time_zone;
          } else {
            data.racknum = racknum;
            data.success = false;
