@@ -1,7 +1,7 @@
 var racknum = $("#rackNum").val();
 var api = {
     local: {
-        host: 'http://192.168.0.106:3001',
+        host: 'http://localhost:3001',
     },
     online: {
         host: 'https://smartrackapi.herokuapp.com',

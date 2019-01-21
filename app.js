@@ -12,7 +12,7 @@ var shelvesRouter = require('./routes/shelves');
 var trafficRouter = require('./routes/traffic');
 var targetModel = require('./models/target');
 var timelapseRouter = require('./routes/timelapse_router');
-
+var locationRouter = require('./routes/location');
 var settings = require('./settings');
 var app = express();
 
@@ -37,6 +37,7 @@ app.use('/users', usersRouter);
 app.use('/shelves', shelvesRouter);
 app.use('/traffic', trafficRouter);
 app.use('/timelapse', timelapseRouter);
+app.use('/location', locationRouter);
 
 app.post('/api/traffic/:_num', function(req,res,next){
   var racknum = req.params['_num'];

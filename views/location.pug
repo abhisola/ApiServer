@@ -1,0 +1,17 @@
+extends layout.pug
+
+block content
+    .starter-template
+        if success
+            h2 Location Of #{rackname}
+                span(style='font-size:24px; font-weight:900') #{' ('+address})
+                input#rackNum(type='hidden', value=racknum)
+            div(calss='row')
+                .col-md-12
+                    #map(style='width:100%; height:645px; margin-top:50px')
+        else 
+            h1="We are sorry, "+msg
+block append scripts
+    script(src='/js/location.js')
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA-gD0X15B1pK_Rj8gz5qj6Mnn27f48aqg&callback=initMap')
+    
