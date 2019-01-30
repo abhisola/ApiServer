@@ -116,7 +116,17 @@ router
                 address : rack.address,
                 start: format_start,
                 end: format_end,
-                shelves : []
+                shelves : [],
+                shelf_type : "",
+                rack_type : ""
+              }
+              if (rack.rack_type == "target") {
+                  template_data.rack_type = "Target";
+              } else if (rack.rack_type == "dollar") {
+                  template_data.rack_type = "Dollar";
+                  template_data.shelf_type = "Center ";
+              } else {
+                  template_data.rack_type = "Demo";
               }
               _.forEach(dbresponse.rows, function (row, i) {
                 var found = _.find(template_data.shelves, {
@@ -149,23 +159,33 @@ router
                 }
               });
               template_data.shelves = _.sortBy(template_data.shelves, ['shelf_num']);
-              mailer.send({
-                from: sent_from,
-                to: sent_to, //List of recievers,
-                subject: subject,
-                template: 'shelf',
-                data: template_data
-              })
-              .then(resp=> {
-                res.render('../mails/templates/shelf', template_data);
-              })
-              .catch(err=>{
-                res.json({
-                  success: false,
-                  msg: 'Error Sending Mail!',
-                  data: []
-                });
-              })
+              if (template_data.shelves.length > 0) {
+                mailer.send({
+                  from: sent_from,
+                  to: sent_to, //List of recievers,
+                  subject: subject,
+                  template: 'shelf',
+                  data: template_data
+                })
+                .then(resp=> {
+                  res.render('../mails/templates/shelf', template_data);
+                })
+                .catch(err=>{
+                  res.json({
+                    success: false,
+                    msg: 'Error Sending Mail!',
+                    data: []
+                  });
+                })
+              }
+              else {
+                 res.json({
+                   success: true,
+                   msg: 'No Shelves Are Empty',
+                   data: []
+                 });
+               }
+
             } else {
               console.log('Error: '+JSON.stringify(err));
               console.log('DBRES: ' + JSON.stringify(dbres));
@@ -217,7 +237,17 @@ router
               address: rack.address,
               start: format_start,
               end: format_end,
-              shelves: []
+              shelves: [],
+              shelf_type : "",
+              rack_type : ""
+            }
+            if (rack.rack_type == "target") {
+                template_data.rack_type = "Target";
+            } else if (rack.rack_type == "dollar") {
+                template_data.rack_type = "Dollar";
+                template_data.shelf_type = "Center ";
+            } else {
+                template_data.rack_type = "Demo";
             }
            _.forEach(dbresponse.rows, function (row, i) {
              var found = _.find(template_data.shelves, {
@@ -250,7 +280,16 @@ router
              }
            });
            template_data.shelves = _.sortBy(template_data.shelves, ['shelf_num']);
+           if (template_data.shelves.length > 0) {
             res.render('../mails/templates/shelf', template_data);
+           }
+           else {
+              res.json({
+                success: true,
+                msg: 'No Shelves Are Empty',
+                data: []
+              });
+            }
           } else {
             console.log('Error: ' + JSON.stringify(err));
             console.log('DBRES: ' + JSON.stringify(dbres));
