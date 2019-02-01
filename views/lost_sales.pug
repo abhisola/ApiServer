@@ -1,0 +1,36 @@
+extends layout.pug
+block content
+    - var n = 0;
+    .starter-template
+      if success
+        h1 Restock - #{name} (#{address})
+        p.lead
+          | To start your visit, select a date range below.
+          a#info(href='#')
+            i.fa.fa-info-circle(style='font-size:24px')
+        span#details(style='display:none;')
+          p
+            | Cameras on of each shelf of the Smart Rack take photos several times a day and then analyzed by an algorithm to count the number of triangles visible. These counts are expressed as a % full in the chart for each shelf.
+          p
+            | Photos from intervals from the time period selected are displayed below each shelf.
+        form#vsv.form-inline
+          input#rackNum(type='hidden', value=racknum)
+          .form-group
+            label(for='startDate') From
+            input#startDate.form-control(type='date', value='2017-02-03')
+          .form-group
+            label(for='endDate') To
+            input#endDate.form-control(type='date', value='2017-01-23')
+          button.btn.btn-primary(type='submit') View
+          i.fa.fa-gear.fa-spin.hidden-xl-down(style='font-size:30px')
+        while n < shelves
+          div(id='shelf'+n, class='row')
+            h3 Shelf #{n+1}
+            .col-md-12
+              canvas(id='chart'+n,style='width:100%;height:150px;')
+          - n++
+        ul#restock_text
+      else
+        h1="We are sorry, "+msg
+block append scripts
+  script(src='/js/restock.js')

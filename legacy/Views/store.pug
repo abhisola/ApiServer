@@ -33,10 +33,36 @@ html(lang='en')
         h1 Stores
         p.lead
           | All stores are listed below.
+
+        ul.nav.nav-tabs
+          li.active
+            a(data-toggle='tab', href='#home') Home
+          |   
+          li
+            a(data-toggle='tab', href='#menu1') Menu 1
+          |  
+          li
+            a(data-toggle='tab', href='#menu2') Menu 2
+        .tab-content
+          #home.tab-pane.fade.in.active
+            h3 HOME
+            |     
+            p Some content.
+          |   
+          #menu1.tab-pane.fade
+            h3 Menu 1
+            |     
+            p Some content in menu 1.
+          |   
+          #menu2.tab-pane.fade
+            h3 Menu 2
+            |     
+            p Some content in menu 2.
+
         table#storesTable.table
           thead
             tr
-              th Rack Number
+              th Rack Num
               th Status
               th.sort(style='cursor:pointer;', data-sort='sort-location', data-key='location.address')
                 | Address

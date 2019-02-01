@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>SmartRack&trade; - Stores</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- add ons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap4.min.css" rel="stylesheet"/>
+
+    <!-- Custom styles for this template -->
+    <link href="template.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-toggleable-md navbar-fixed-top navbar-inverse bg-inverse">
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#"><img src="images/logo-red.svg" alt="SmartRack.io"></a>
+      <div class="collapse navbar-collapse" id="navbarTop">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Stores <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="audience.html">Audience </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ads.html">Ads </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="starter-template">
+
+        <h1>Stores</h1>
+        <p class="lead">
+          All stores are listed below.
+          <a href="#" id="info" ><i class="fa fa-question-circle" style="font-size:24px"></i></a>
+        </p>
+        <span id="details" style="display:none;">
+          <p>For more information on a store, click the corresponding icon:</p>
+          <a href="#" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a> Shelves - Products and estimated inventory levels<br>
+          <a href="#" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a> Audience - Foot traffic by day, last 30 days<br>
+        </span>
+
+        <table class="table" id="storesTable">
+          <thead>
+            <tr>
+              <th>VPN / Rack Num</th>
+              <th>Status</th>
+              </th><th class="sort" style="cursor:pointer;" data-sort="sort-location" data-key="location.address">Address
+              </th><th class="sort" style="cursor:pointer;" data-sort="sort-display" data-key="name">Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="display table-success" >
+              <td>01JC<br/>000001</td>
+              <td>Active</td>
+              <td><a href="#">DG Prototype SmarTRack<br>850 Springfield Hwy, Goodlettsville, TN<br> USA</a></td>
+              <td><a href="#">DG Prototype SmarTRack</a></td>
+              <td nowrap>
+                <a href="shelves/000001.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="#" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+            <tr class="display table-success">
+              <td>02JV<br/>000002</td>
+              <td>Active</td>
+              <td><a href="#">ITCUS OFFICE RACK <br> United States</a></td>
+              <td><a href="#">Schaumburg</a></td>
+              <td nowrap>
+                <a href="shelves/000002.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="#" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+            <tr class="display table-success" >
+              <td>03JV<br/>000003</td>
+              <td>Active</td>
+              <td><a href="#">Overland Park <br>Blue Valley PKWY, KS</a></td>
+              <td><a href="#">Overland Park </a></td>
+              <td nowrap>
+                <a href="shelves/000003.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="targets/target3.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+            <tr class="display table-success">
+              <td>04JV<br/>000004</td>
+              <td>Active</td>
+              <td><a href="#">Olathe<br> W 119TH ST, KS</a></td>
+              <td><a href="#">Olathe</a></td>
+              <td nowrap>
+                <a href="shelves/000004.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="targets/target4.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+<!--
+
+            <tr class="display table-success" data-id="firXNTezigcmHGxxy">
+              <td>01JW<br/>000005</td>
+              <td>Active</td>
+              <td><a href="https://organize.redpost.co/market/oLAkrfhnipKSnuNyD/locations/pu8yz2KFvHqjJAMRB/edit">54943 N Main St<br>Mattawan, MI<br> United States</a></td>
+              <td><a href="https://organize.redpost.co/displays/firXNTezigcmHGxxy">MPI Research</a></td>
+              <td nowrap>
+                <a href="shelves/000005.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="audience.html?location=pu8yz2KFvHqjJAMRB" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+
+            <tr class="display table-success" data-id="sSSRRg5MaPQvgBsk3">
+              <td>01EG<br/>000006</td>
+              <td>Active</td>
+              <td><a href="https://organize.redpost.co/market/oLAkrfhnipKSnuNyD/locations/2CbecGzkgwDCvdS8a/edit">572 W Lake St<br>Elmhurst, IL<br> United States</a></td>
+              <td><a href="https://organize.redpost.co/displays/sSSRRg5MaPQvgBsk3">Power Market - W Lake St</a></td>
+              <td nowrap>
+                <a href="shelves/000002.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="audience.html?location=2CbecGzkgwDCvdS8a" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+
+            <tr class="display table-success" data-id="88BfBstDqDW8pTJSg">
+              <td>01K5<br/>000007</td>
+              <td>Active</td>
+              <td><a href="https://organize.redpost.co/market/oLAkrfhnipKSnuNyD/locations/Aajr5rExjnpy8vnic/edit">400 N Wall St<br>Kankakee, IL 60901<br> USA</a></td>
+              <td><a href="https://organize.redpost.co/displays/88BfBstDqDW8pTJSg">Riverside Medical Center (Kankakee, IL)</a></td>
+              <td nowrap>
+                <a href="shelves/000007.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="audience.html?location=Aajr5rExjnpy8vnic" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+            <tr class="display table-default" data-id="d3oMsEmXvnB96xD3x">
+              <td><br/>000008</td>
+              <td>Inactive</td>
+              <td><a href="https://organize.redpost.co/market/oLAkrfhnipKSnuNyD/locations/jRyW2vXcC6TNmfs7a/edit">951 East 162nd Street<br>South Holland, IL 60473<br> United States</a></td>
+              <td><a href="https://organize.redpost.co/displays/d3oMsEmXvnB96xD3x">BP South Holland IL</a></td>
+              <td nowrap>
+                <a href="shelves/000008.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="audience.html?location=jRyW2vXcC6TNmfs7a" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+            <tr class="display table-default" data-id="AEkRFXhcsHhPaTxJT">
+              <td><br/>000010</td>
+              <td>Inactive</td>
+              <td><a href="https://organize.redpost.co/market/oLAkrfhnipKSnuNyD/locations/mQdgcgqjb7GrNJbKs/edit">9545 191st Street<br>Mokena, IL 60448<br> United States</a></td>
+              <td><a href="https://organize.redpost.co/displays/AEkRFXhcsHhPaTxJT">BP Mokena IL</a></td>
+              <td nowrap>
+                <a href="shelves/000010.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="audience.html?location=mQdgcgqjb7GrNJbKs" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+            <tr class="display table-default" data-id="BycP5ZR7r8cQKxsQR">
+              <td><br/>000011</td>
+              <td>Inactive</td>
+              <td><a href="https://organize.redpost.co/market/oLAkrfhnipKSnuNyD/locations/mdJARLPNZgLYXstch/edit">16 E Lincoln Hwy<br>Frankfort, IL 60423<br> USA</a></td>
+              <td><a href="https://organize.redpost.co/displays/BycP5ZR7r8cQKxsQR">BP Frankfort IL</a></td>
+              <td nowrap>
+                <a href="shelves/000011.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="audience.html?location=mdJARLPNZgLYXstch" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+            <tr class="display table-default" data-id="L2RQpnBftsGh45eRv">
+              <td><br/>000009</td>
+              <td>Inactive</td>
+              <td><a href="https://organize.redpost.co/market/oLAkrfhnipKSnuNyD/locations/sPGJkyXrvYbJ9YvDN/edit">3950 Vollmer Road<br>Flossmoor, IL 60422<br> United States</a></td>
+              <td><a href="https://organize.redpost.co/displays/L2RQpnBftsGh45eRv">BP Flossmoor IL</a></td>
+              <td nowrap>
+                <a href="shelves/000009.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="audience.html?location=PGJkyXrvYbJ9YvDN" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+            <tr class="display table-default" data-id="6cW8scNT32hKGansa">
+              <td><br/>000012</td>
+              <td>Inactive</td>
+              <td><a href="https://organize.redpost.co/market/oLAkrfhnipKSnuNyD/locations/du7yB6X96JhWQ2hmK/edit">3321 W Algonquin Rd<br>Rolling Meadows, IL 60008<br> United States</a></td>
+              <td><a href="https://organize.redpost.co/displays/6cW8scNT32hKGansa">Marathan Rolling Meadows IL</a></td>
+              <td nowrap>
+                <a href="shelves/000012.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="audience.html?location=du7yB6X96JhWQ2hmK" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+
+            <tr class="display table-default" data-id="6cW8scNT32hKGansa">
+              <td><br/>EEEEEE</td>
+              <td>Inactive</td>
+              <td><a href="https://organize.redpost.co/market/oLAkrfhnipKSnuNyD/locations/QkcanyHHoJ9pE2mFw/edit">Oakbrook, IL<br> United States</a></td>
+              <td><a href="https://organize.redpost.co/displays/QkcanyHHoJ9pE2mFw">Sales Conference Demo Unit</a></td>
+              <td nowrap>
+                <a href="shelves/EEEEEE.html" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-area-chart"></i></a>
+                <a href="audience.html?location=QkcanyHHoJ9pE2mFw" role="button" aria-pressed="true" class="btn btn-outline-primary btn-sm"><i class="fa fa-users"></i></a>
+              </td>
+            </tr>
+-->
+          </tbody>
+        </table>
+
+      </div>
+    </div><!-- /.container -->
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="jquery.zoom.min.js"></script>
+    <script src="jquery-dateFormat.min.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $("#info").click(function() { $("#details").toggle(100); });
+      });
+    </script>
+
+  </body>
+</html>
+

@@ -1,0 +1,50 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    meta(name='description', content='')
+    meta(name='author', content='')
+    link(rel='icon', href='./favicon.ico')
+    title=title
+    // Bootstrap core CSS
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css', integrity='sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ', crossorigin='anonymous')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+    // add ons
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap4.min.css', rel='stylesheet')
+    // Custom styles for this template
+    link(href='/css/style.css', rel='stylesheet')
+  body
+    nav.navbar.navbar-toggleable-md.navbar-fixed-top.navbar-inverse.bg-inverse
+        button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#navbarTop', aria-controls='navbarTop', aria-expanded='false', aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+        a.navbar-brand(href='#')
+        img(src='', alt='SmartRack.io')
+        #navbarTop.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+            li.nav-item
+            a.nav-link(href='/') Stores
+            li.nav-item
+            a.nav-link(href='/shelves/'+racknum) Shelf
+            li.nav-item
+            a.nav-link(href='/traffic/'+racknum) Traffic
+            li.nav-item
+            a.nav-link(href='/shelves/restock/response/dashboard/') Response
+            li.nav-item
+            a.nav-link(href='/timelapse/'+racknum) Timelapse
+    .container
+        block content
+
+    block scripts
+      script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js')
+      // Bootstrap core JavaScript
+      script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js', integrity='sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7', crossorigin='anonymous')
+      script(src='https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js', integrity='sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb', crossorigin='anonymous')
+      script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js', integrity='sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn', crossorigin='anonymous')
+      script(src='/js/jquery.zoom.min.js')
+      script(src='/js/jquery-dateFormat.min.js')
+      script(src='/js/luxon.min.js')
+      script(src='/js/lodash.min.js')
+      script(src='/js/utils.js')
