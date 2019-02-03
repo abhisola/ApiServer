@@ -18,14 +18,17 @@ function showSpinner() {
 function ini() {
     $("#endDate").val(getYesterday());
     $("#startDate").val(getYesterday());
-    $("#info").click(function () {
-    $("#details").toggle(100);
+    $("#date_range_button").click(function (event) {
+        fetchDateRange();
     });
+    hideVideos();
+    showNoData();
 }
 
 videos = {};
 
 function inilialize(json){
+    videos = {};
     console.log(json);
     var video_dom = $('#videos');
     var shelf_keys = Object.keys(json)
@@ -47,6 +50,8 @@ function render() {
     var video_dom = $('#videos');
     video_dom.html('');
     var shelf_keys = Object.keys(videos);
+    console.log(video_dom);
+    console.log(shelf_keys);
     for (j = 0; j < shelf_keys.length; j++) {
         var shelf_number = shelf_keys[j];
         var video_obj = videos[shelf_number];
@@ -57,13 +62,14 @@ function render() {
         var day1 = video_obj.urls[from]?luxon.DateTime.fromISO(video_obj.urls[from].date_recorded).toFormat('dd LLL'):'';
         var day2 = video_obj.urls[from+1]?luxon.DateTime.fromISO(video_obj.urls[from+1].date_recorded).toFormat('dd LLL'):'';
         var day3 = video_obj.urls[from+2]?luxon.DateTime.fromISO(video_obj.urls[from+2].date_recorded).toFormat('dd LLL'):'';
-        var video_top = "<div class='row'><div class='col-md-12 video-title' style='margin-bottom:20px;'><h2>Timelapse For Shelf " + (Number(video_obj.shelf)+1) + "</h2></div>";
-        var back_button = "<div class='col-md-1'> <a  onclick='pagenator(" + video_obj.shelf + ", true)'><img src='/images/back.jpg' ></a> </div>";
+        var video_top = "<div class='shelf_stock_row row'><div class='col-md-12 video-title' style='margin-bottom:20px;'><h2>Timelapse For Shelf " + (Number(video_obj.shelf)+1) + " - <span class='text-info'>Pringles Saur Cream And Onion </span></h2></div>";
+        var back_button = "<div class='col-md-1'> <a  onclick='pagenator(" + video_obj.shelf + ", true)'><img src='/img/back.jpg' ></a> </div>";
         var video_1 = "<div class='col-md-3 video-container'> <video src='"+vid1_src+"', id='1_shelf" + video_obj.shelf + "', controls='', style='background:black' width='250'></video><label class='video-container-label'>"+day1+"</label> </div> ";
         var video_2 = "<div class='col-md-3 video-container'> <video src='"+vid2_src+"', id='2_shelf" + video_obj.shelf + "', controls='', style='background:black' width='250'></video><label class='video-container-label'>"+day2+"</label> </div> ";
         var video_3 = "<div class='col-md-3 video-container'> <video src='"+vid3_src+"', id='3_shelf" + video_obj.shelf + "', controls='', style='background:black' width='250'></video><label class='video-container-label'>"+day3+"</label> </div> ";
-        var next_button = "<div class='col-md-1'> <a onclick='pagenator(" + video_obj.shelf + ", false)'><img src='/images/next.jpg'></a> </div>";
+        var next_button = "<div class='col-md-1'> <a onclick='pagenator(" + video_obj.shelf + ", false)'><img src='/img/next.jpg'></a> </div>";
         var video_bottom = "</div>";
+        console.log(video_top + back_button + video_1 + video_2 + video_3 + next_button + video_bottom);
         video_dom.append(video_top + back_button + video_1 + video_2 + video_3 + next_button + video_bottom);
     }
 }
@@ -104,15 +110,29 @@ function fetchDateRange() {
             "accept": "application/json",
         },
         success: function (data) {
-            if (data.err) console.log('Serverside Error');
+            if (data.err) { 
+                console.log('Serverside Error');
+                hideVideos();
+                showNoData();
+            }
             else {
-                inilialize(data.data);
+                if($.isEmptyObject(data.data)) {
+                    hideVideos();
+                    showNoData();
+                } else {
+                    hideNoData();
+                    showVideos();
+                    inilialize(data.data);
+                }
+                
                 
             }
         },
         error: function (data) {
             console.log("Error");
             console.log(data);
+            hideVideos();
+            showNoData();
         }
     });
     return false;
@@ -131,3 +151,19 @@ $(document).ready(function () {
         myvid.get(0).play();
       });
   });
+
+  function showVideos(params) {
+    $("#videos").hasClass('hidden')?$("#videos").removeClass('hidden'):'';
+  }
+  
+  function hideVideos(params) {
+    $("#videos").hasClass('hidden')?'':$("#videos").addClass('hidden');
+  }
+  
+  function showNoData(params) {
+    $(".shelves_chart_nodata").hasClass('hidden')?$(".shelves_chart_nodata").removeClass('hidden'):'';
+  }
+  
+  function hideNoData(params) {
+    $(".shelves_chart_nodata").hasClass('hidden')?'':$(".shelves_chart_nodata").addClass('hidden');
+  }

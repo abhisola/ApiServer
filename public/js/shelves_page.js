@@ -86,7 +86,7 @@ charts = [];
     if($("#thumbs"+shelf).length) {
       $("#thumbs"+shelf).empty();
     } else {
-      $("#shelf"+shelf+" .col-md-12").after("<div id='thumbs"+shelf+"' class='thumbs col-md-12 nolpadding norpadding'></div>");
+      $("#shelf"+shelf+" .stock_chart.col-md-12").after("<div id='thumbs"+shelf+"' class='thumbs col-md-12 nolpadding norpadding'></div>");
     }
     // create a new array with that number of images
     thumbs = new Array();
@@ -151,15 +151,7 @@ charts = [];
               labelString: 'Percent Full'
             }
           }],
-          xAxes: [/*{
-            type: 'time',
-            unit: 'day',
-            time: {
-              displayFormats: {
-                'day': 'MMM DD'
-              }
-            }
-          }*/]
+          xAxes: []
         },
         mounted() {
             this.renderChart(this.renderData, this.renderOptions);
@@ -194,8 +186,8 @@ function showSpinner () {
   $("i.fa-gear").removeClass("hidden-xl-down");
 }
 
-function fetchData(event) {
-  event.preventDefault();
+function fetchData() {
+ // event.preventDefault();
   showSpinner();
   $("canvas").empty();
   var start = $("#startDate").val()+"T00:00:00";
@@ -221,12 +213,27 @@ function fetchData(event) {
     },
     success: function (data) {
       console.log(JSON.stringify(data));
-      if(data.err) console.log('Serverside Error');
-      else updateShelf(data.data);
+      if(data.err) {
+        console.log('Serverside Error');
+        hideStockChart();
+        showNoData();
+      } else {
+        if($.isEmptyObject(data.data)) {
+          hideStockChart();
+          showNoData();
+        } else {
+          showStockChart();
+          hideNoData();
+          updateShelf(data.data);
+        }
+        
+      } 
     },
     error: function(data) {
       console.log("Error");
       console.log(data);
+      hideStockChart();
+      showNoData();
     }
   });
   return false;
@@ -235,11 +242,30 @@ function fetchData(event) {
 function ini() {
   $("#endDate").val(getYesterday());
   $("#startDate").val(getYesterday());
-  $("#info").click(function () {
-    $("#details").toggle(100);
-  });
+  hideStockChart();
+  showNoData();
 }
-$(document).ready(function () {
+$(document).ready(function() {
   ini();
-  $("#vsv").submit(fetchData);
+  $("#date_range_button").click(function (event) {
+    fetchData();
+  });
 });
+
+function showStockChart(params) {
+  $(".stock_chart").hasClass('hidden')?$(".stock_chart").removeClass('hidden'):'';
+  $(".thumbs").hasClass('hidden')?$(".thumbs").removeClass('hidden'):'';
+}
+
+function hideStockChart(params) {
+  $(".stock_chart").hasClass('hidden')?'':$(".stock_chart").addClass('hidden');
+  $(".thumbs").hasClass('hidden')?'':$(".thumbs").addClass('hidden');
+}
+
+function showNoData(params) {
+  $(".shelves_chart_nodata").hasClass('hidden')?$(".shelves_chart_nodata").removeClass('hidden'):'';
+}
+
+function hideNoData(params) {
+  $(".shelves_chart_nodata").hasClass('hidden')?'':$(".shelves_chart_nodata").addClass('hidden');
+}

@@ -49,3 +49,7 @@ function sanatizeTimeAndFormat2(isoDateString) {
     var dt = luxon.DateTime.fromISO(san).toFormat('LLL dd, hh:mma');
     return dt;
 }
+$(document).ready(function() {
+    $("#details").toggle(100);
+    $("#info").click(function() { $("#details").toggle(100); });
+});

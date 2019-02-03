@@ -1,36 +1,65 @@
 extends layout.pug
 block content
+  include nav.pug
+    
+  .container
     - var n = 0;
-    .starter-template
-      if success
-        h1 Restock - #{name} (#{address})
-        p.lead
-          | To start your visit, select a date range below.
-          a#info(href='#')
-            i.fa.fa-info-circle(style='font-size:24px')
-        span#details(style='display:none;')
-          p
-            | Cameras on of each shelf of the Smart Rack take photos several times a day and then analyzed by an algorithm to count the number of triangles visible. These counts are expressed as a % full in the chart for each shelf.
-          p
-            | Photos from intervals from the time period selected are displayed below each shelf.
-        form#vsv.form-inline
-          input#rackNum(type='hidden', value=racknum)
-          .form-group
-            label(for='startDate') From
-            input#startDate.form-control(type='date', value='2017-02-03')
-          .form-group
-            label(for='endDate') To
-            input#endDate.form-control(type='date', value='2017-01-23')
-          button.btn.btn-primary(type='submit') View
-          i.fa.fa-gear.fa-spin.hidden-xl-down(style='font-size:30px')
-        while n < shelves
-          div(id='shelf'+n, class='row')
-            h3 Shelf #{n+1}
-            .col-md-12
-              canvas(id='chart'+n,style='width:100%;height:150px;')
-          - n++
-        ul#restock_text
-      else
-        h1="We are sorry, "+msg
+    if success
+      .col-md-12
+        h1
+          | Restock - Target Olathe 
+          span#store_address (store #:T5345, Address: W 119TH ST, Olathe, KS) 
+        h3
+          | To start your restock investigation select a date range below. 
+          a#info
+            i.fa.fa-info-circle
+        #details
+          p  
+          p  
+        h3
+          | *All times are in 
+          span.text-danger CST 
+          | timezone.
+      #rack_types.row
+        .col-lg-12.col-lg-offset-0.col-md-12
+          div
+            input#rackNum(type='hidden', value=racknum)
+            span#from_date.text-danger From 
+            input#startDate.big(type='date', value='2019-02-01')
+            span#to_date.text-danger To 
+            input#endDate.big(type='date', value='2019-02-01')
+            a#date_range_button.btn.btn-primary(role='button') View 
+      .row
+        .col-md-12
+          #restock_tabs
+            ul.nav.nav-tabs
+              li.active
+                a(href='#tab-1', role='tab', data-toggle='tab') Restock Charts
+              li
+                a(href='#tab-2', role='tab', data-toggle='tab') Restock Data
+            .tab-content
+              #tab-1.tab-pane.active(role='tabpanel')
+                while n < shelves
+                  div(id='shelf'+n, class='row shelf_stock_row')
+                    h2 
+                      | Shelf #{n+1} 
+                      //- span.text-info - Pringles Saur Cream And Onion 
+                    .restock_chart.col-md-12
+                      canvas(id='chart'+n,style='width:100%;height:150px;')
+                    .col-md-12
+                      .shelves_chart_nodata
+                        h1.text-center.text-muted No Data Found To Display Chart
+                  - n++
+                  
+              #tab-2.tab-pane(role='tabpanel')
+                .row
+                  .col-md-12
+                    #restock_data.div
+                      ul.list-group
+                  .col-md-12
+                      .shelves_chart_nodata
+                        h1.text-center.text-muted No Data Found To Display Chart
+    else
+      h1="We are sorry, "+msg
 block append scripts
-  script(src='/js/restock.js')
+  script(src='/js/restock_page.js')

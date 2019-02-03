@@ -31,9 +31,7 @@ function customTooltips(tooltip) {
     } else {
         tooltipEl.classList.add('no-transform');
     }
-    // function getBody(bodyItem) {
-    //   return bodyItem.lines;
-    // }
+
     // Set Text
     if (tooltip.body) {
         var tableRoot = tooltipEl.querySelector('img');
@@ -41,16 +39,12 @@ function customTooltips(tooltip) {
         var date = tooltipEl.querySelector('span#date');
         var shelf = tooltipEl.querySelector('span#shelf');
         var percent = tooltipEl.querySelector('span#percent');
-        var ttImg = this._data.datasets[0].images[tooltip.dataPoints[0].index];
         var shelfNum = this._data.datasets[0].shelfs[tooltip.dataPoints[0].index];
         var percent_empty = this._data.datasets[0].percents[tooltip.dataPoints[0].index];
         val.innerHTML = tooltip.dataPoints[0].yLabel;
         date.innerHTML = "Date: "+tooltip.dataPoints[0].xLabel;
         shelf.innerHTML = "Shelf: " + (parseInt(shelfNum) + 1) + "";
         percent.innerHTML = "Percent: " + percent_empty;
-        if(ttImg == null || ttImg == 'null') {
-            tableRoot.src = "#";
-        } else tableRoot.src = ttImg;
     }
     var position = this._chart.canvas.getBoundingClientRect();
     var sTop = $(window).scrollTop();
@@ -87,50 +81,7 @@ function updateShelf(json) {
             shelfs.push(report['shelf_num']);
             percents.push((100 - parseInt(report['from_percent'])) + '% To ' + (100 - parseInt(report['to_percent']))+'%');
         });
-/* Thumb Images Generation
-        // now build a div from images arr
-        // count total number images
-        imagesTotal = images.length;
-        // determine width of div to write to
-        thumbsDivWidth = $("#shelf" + shelf).width();
-        // calculate the number of images to fit in that div
-        thumbsNum = Math.floor(thumbsDivWidth / 150);
-        // create (or clear out if it already exists) thumbs div
-        if ($("#thumbs" + shelf).length) {
-            $("#thumbs" + shelf).empty();
-        } else {
-            $("#shelf" + shelf + " .col-md-12").after("<div id='thumbs" + shelf + "' class='thumbs col-md-12 nolpadding norpadding'></div>");
-        }
-        // create a new array with that number of images
-        thumbs = new Array();
-        thumbsDates = new Array();
-        // if there aren't enough thumbs to fill the div, just write what we have
-        if (imagesTotal < thumbsNum) {
-            skipNum = 0;
-            thumbsNum = imagesTotal;
-            for (i = 0; i < imagesTotal + 1; i++) {
-                thumbs.push(images[i]);
-                thumbsDates.push(labels[i]);
-            }
-        } else {
-            skipNum = Math.floor(imagesTotal / (thumbsNum - 1));
-            // if the div exists, empty it
-            for (i = 0; i < imagesTotal + 1; i = i + skipNum) {
-                if (imagesTotal - i < skipNum) {
-                    thumbs.push(images[imagesTotal - 1]);
-                    thumbsDates.push(labels[imagesTotal - 1]);
-                } else {
-                    thumbs.push(images[i]);
-                    thumbsDates.push(labels[i]);
-                }
-            }
-        }
-        // make thumbnail mouseover work
-        // write image thumbnails to div in correct width
-        for (i = 0; i < thumbsNum; i++) {
-            $("#thumbs" + shelf).append("<span class='thumb-wrap'><a href='" + thumbs[i] + "'><img class='thumb' src=" + thumbs[i] + " width='148' title='" + thumbs[i] + "'></a></span>");
-        }
-*/
+
         var ctx_data = $("#chart" + rack).get(0).getContext("2d");
         var chart = new Chart(ctx_data, {
             type: 'bar',
@@ -165,17 +116,7 @@ function updateShelf(json) {
                             labelString: 'Hours To Restock'
                         }
                     }],
-                    xAxes: [
-                        /*{
-                                    type: 'time',
-                                    unit: 'day',
-                                    time: {
-                                      displayFormats: {
-                                        'day': 'MMM DD'
-                                      }
-                                    }
-                                  }*/
-                    ]
+                    xAxes: []
                 },
                 mounted() {
                     this.renderChart(this.renderData, this.renderOptions);
@@ -190,13 +131,6 @@ function updateShelf(json) {
         });
         charts.push(chart);
     }
-    /*$('img.thumb')
-        .wrap('<span style="display:inline-block"></span>')
-        .css('display', 'block')
-        .parent()
-        .zoom({
-            magnify: '.2'
-        });*/
     hideSpinner();
 }
 
@@ -211,9 +145,8 @@ function hideSpinner() {
 function showSpinner() {
     $("i.fa-gear").removeClass("hidden-xl-down");
 }
-
-function fetchData(event) {
-    event.preventDefault();
+var response_data;
+function fetchData() {
     showSpinner();
     $("canvas").empty();
     var start = $("#startDate").val() + "T00:01:00";
@@ -246,25 +179,75 @@ function fetchData(event) {
         },
         success: function (data) {
             console.log(JSON.stringify(data));
-            if (data.err) console.log('Serverside Error');
-            else updateShelf(data.data);
+            if (data.err) {
+                console.log('Serverside Error');
+                hideResponseChart();
+                showNoData();
+            } else {
+                showResponseChart();
+                hideNoData();
+                response_data = data.data;
+                updateShelf(response_data);
+            } 
         },
         error: function (data) {
             console.log("Error");
             console.log(data);
+            hideResponseChart();
+            showNoData();
         }
     });
     return false;
 }
-
+function refreshChart() {
+    
+    if(response_data) {
+        $(".canvas").empty();
+        updateShelf(response_data);
+    }
+    
+}
+function updateTextData(data) {
+    var restock_data_dom = $('#restock_data.div > ul.list-group').empty();
+    data.forEach(row => {
+        
+        var restock_text = (parseInt(row.shelf_num) + 1) + ": Restocked " + sanatizeTimeAndFormat2(row.to_date);
+        var response_text = "Response Time: " + row.hours.toFixed(2) + " h"
+        var list = '<li class="list-group-item"><div class="row"><div class="col-lg-6 col-md-6"><h2>Shelf '+ restock_text +'</h2></div>'+
+        '<div class="col-lg-6 col-md-6"><h2>'+response_text+'</h2></div>'+
+        '</div></div></li>';
+        restock_data_dom.append(list);
+    });
+   }
 function ini() {
     $("#endDate").val(getYesterday());
     $("#startDate").val(getYesterday());
-    $("#info").click(function () {
-        $("#details").toggle(100);
+    $("#date_range_button").click(function (event) {
+        fetchData();
+    });
+    $(".nav-tabs").click(function (params) {
+        refreshChart();
+        setTimeout(refreshChart, 1500);
     });
 }
 $(document).ready(function () {
     ini();
-    $("#vsv").submit(fetchData);
+    hideResponseChart();
+    showNoData();
 });
+
+function showResponseChart(params) {
+    $(".response_chart").hasClass('hidden')?$(".response_chart").removeClass('hidden'):'';
+  }
+  
+  function hideResponseChart(params) {
+    $(".response_chart").hasClass('hidden')?'':$(".response_chart").addClass('hidden');
+  }
+  
+  function showNoData(params) {
+    $(".shelves_chart_nodata").hasClass('hidden')?$(".shelves_chart_nodata").removeClass('hidden'):'';
+  }
+  
+  function hideNoData(params) {
+    $(".shelves_chart_nodata").hasClass('hidden')?'':$(".shelves_chart_nodata").addClass('hidden');
+  }

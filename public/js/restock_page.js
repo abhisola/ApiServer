@@ -15,7 +15,7 @@ function updateRestockShelf(resjson) {
         }
     }
     charts = [];
-    var json = _.groupBy(resjson.data, function (b) {
+    var json = _.groupBy(resjson, function (b) {
         return b.shelf_num;
     })
     console.log(json);
@@ -70,13 +70,6 @@ function updateRestockShelf(resjson) {
         });
         charts.push(chart);
     }
-    $('img.thumb')
-        .wrap('<span style="display:inline-block"></span>')
-        .css('display', 'block')
-        .parent()
-        .zoom({
-            magnify: '.2'
-        });
     hideSpinner();
 }
 
@@ -91,8 +84,8 @@ function hideSpinner() {
 function showSpinner() {
     $("i.fa-gear").removeClass("hidden-xl-down");
 }
-function fetchData(event) {
-    event.preventDefault();
+var response_data;
+function fetchData() {
     var date1 = $("#startDate").val();
     var date2 = $("#endDate").val();
     var utcDate1 = date1 + "T00:01:00"
@@ -120,35 +113,81 @@ function fetchData(event) {
             "accept": "application/json",
         },
         success: function (data) {
-            if (data.err) console.log('Serverside Error');
-            else {
-                updateRestockShelf(data);
-                updateTextData(data);
+            if (data.err) {
+                hideRestockChart();
+                showNoData();
+                console.log('Serverside Error');
+            } else {
+                if(data.data.length > 0) {
+                    response_data = data.data;
+                    updateRestockShelf(response_data);
+                    updateTextData(response_data);
+                    showRestockChart();
+                    hideNoData();
+                } else {
+                    hideRestockChart();
+                    showNoData();
+                }
             }
         },
         error: function (data) {
             console.log("Error");
             console.log(data);
+            hideRestockChart();
+            showNoData();
         }
     });
     return false;
 }
 
 function updateTextData(data) {
-    $('ul#restock_text').empty();
-    data.data.forEach(row => {
-        var text = "Shelf " + (parseInt(row.shelf_num) + 1) + ": Restocked " + sanatizeTimeAndFormat2(row.to_date) + ". Response Time: " + row.hours + " h";
-        $('ul#restock_text').append('<li><h2>'+text+'</h2></li>');
+    var restock_data_dom = $('#restock_data.div > ul.list-group').empty();
+    data.forEach(row => {
+        
+        var restock_text = (parseInt(row.shelf_num) + 1) + ": Restocked " + sanatizeTimeAndFormat2(row.to_date);
+        var response_text = "Response Time: " + row.hours.toFixed(2) + " h"
+        var list = '<li class="list-group-item"><div class="row"><div class="col-lg-6 col-md-6"><h2>Shelf '+ restock_text +'</h2></div>'+
+        '<div class="col-lg-6 col-md-6"><h2>'+response_text+'</h2></div>'+
+        '</div></div></li>';
+        restock_data_dom.append(list);
     });
 }
 function ini() {
     $("#endDate").val(getYesterday());
     $("#startDate").val(getYesterday());
-    $("#info").click(function () {
-        $("#details").toggle(100);
-    });
+    hideRestockChart();
+    showNoData();
+}
+function refreshChart() {
+    if(response_data) {
+        $(".canvas").empty();
+        updateRestockShelf(response_data);
+    }
+    
 }
 $(document).ready(function () {
     ini();
-    $("#vsv").submit(fetchData);
+    $("#date_range_button").click(function (event) {
+        fetchData();
+    });
+    $(".nav-tabs").click(function (params) {
+        refreshChart();
+        setTimeout(refreshChart, 1500);
+    });
 });
+
+function showRestockChart(params) {
+    $(".restock_chart").hasClass('hidden')?$(".restock_chart").removeClass('hidden'):'';
+  }
+  
+  function hideRestockChart(params) {
+    $(".restock_chart").hasClass('hidden')?'':$(".restock_chart").addClass('hidden');
+  }
+  
+  function showNoData(params) {
+    $(".shelves_chart_nodata").hasClass('hidden')?$(".shelves_chart_nodata").removeClass('hidden'):'';
+  }
+  
+  function hideNoData(params) {
+    $(".shelves_chart_nodata").hasClass('hidden')?'':$(".shelves_chart_nodata").addClass('hidden');
+  }

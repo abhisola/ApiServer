@@ -3,6 +3,7 @@ function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -34.397, lng: 150.644},
         zoom: 18,
+        mapTypeId: google.maps.MapTypeId.HYBRID,
         styles: [
             {
               "elementType": "geometry",
@@ -218,8 +219,9 @@ function initMap() {
               ]
             }
           ]
+          
     });
-    data = fetch_data();
+    data = fetch_data()
 }
 function load_data(data) {
     map.setCenter(new google.maps.LatLng(data[0].lat, data[0].lng))
@@ -246,14 +248,28 @@ function fetch_data() {
             withCredentials: false
         },
         success: function (json) {
-            if (json.err) console.log('Serverside Error');
+            if (json.err) {
+                showNoData();
+                hideMap();
+                console.log('Serverside Error');
+            } 
             else {
-                load_data(json.data);
+                if(json.data.length > 0) {
+                    showMap();
+                    hideNoData();
+                    load_data(json.data);
+                } else {
+                    showNoData();
+                    hideMap();
+                }
+                
             }
         },
         error: function (json) {
             console.log("Error");
             console.log(data);
+            showNoData();
+            hideMap();
         }
     });
 }
@@ -261,3 +277,23 @@ function getUrl(){
     return used_host + "/location/api/location/" + racknum;
 }
 
+function showMap(params) {
+    $("#map").hasClass('hidden')?$("#map").removeClass('hidden'):'';
+}
+
+function hideMap(params) {
+    $("#map").hasClass('hidden')?'':$("#map").addClass('hidden');
+}
+
+function showNoData(params) {
+    $(".shelves_chart_nodata").hasClass('hidden')?$(".shelves_chart_nodata").removeClass('hidden'):'';
+}
+
+function hideNoData(params) {
+    $(".shelves_chart_nodata").hasClass('hidden')?'':$(".shelves_chart_nodata").addClass('hidden');
+}
+
+$(document).ready(function() {
+    showNoData();
+    hideMap();
+});

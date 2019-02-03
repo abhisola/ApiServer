@@ -1,0 +1,91 @@
+.flavor-original {
+  background-color:#DA1F26;
+}
+
+.flavor-ranch {
+  background-color:#0997B1;
+}
+
+.flavor-pizza {
+  background-color:#D9DFE1;
+}
+
+.flavor-reducedfat {
+  background-color:#854495;
+}
+
+.flavor-sourcreamonion {
+  background-color:#48A53B;
+}
+
+.flavor-cheddarcheese {
+  background-color:#CE691B;
+}
+
+.flavor-saltvinegar {
+  background-color:#005CBD;
+}
+
+.flavor-bbq {
+  background-color:#552636;
+}
+
+.flavor-loadedpotato {
+  background-color:#82412C;
+}
+
+.flavor-sourcreamonionlightlysalted {
+  background-color:#7ECA52;
+}
+
+.flavor-originallightlysalted {
+  background-color:#AF363C;
+}
+
+.flavor-honeymustard {
+  background-color:#C0812B;
+}
+
+.flavor-mesquitebbq {
+  background-color:#943135;
+}
+
+.flavor-cheddarsourcream {
+  background-color:#0C84B1;
+}
+
+.flavor-dillpickle {
+  background-color:#A3AA3F;
+}
+
+.flavor-jalapeno {
+  background-color:#2C351F;
+}
+
+.flavor-loudsalsafiesta {
+  background-color:#74306C;
+}
+
+.flavor-loudzestyitalian {
+  background-color:#687531;
+}
+
+.flavor-loudsomethingpizza? {
+  background-color:#BE2E2E;
+}
+
+.circle {
+  margin:5px auto;
+  border-radius:50%;
+  width:2em;
+  height:2em;
+}
+
+div#pringles_stock.row {
+  margin-top:25px;
+}
+
+table#pringles_table > thead > tr > th {
+  text-align:center;
+}
+
