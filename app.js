@@ -28,7 +28,7 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.header('Access-Control-Allow-Credentials', true);
   next();
-}); 
+});
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -41,7 +41,11 @@ app.use('/shelves', shelvesRouter);
 app.use('/traffic', trafficRouter);
 app.use('/timelapse', timelapseRouter);
 app.use('/location', locationRouter);
+<<<<<<< HEAD
 app.use('/tof_sensor_demo', tofdemoRouter);
+=======
+
+>>>>>>> master
 app.post('/api/traffic/:_num', function(req,res,next){
   var racknum = req.params['_num'];
   var res_data = req.body;
@@ -73,7 +77,7 @@ app.post('/api/traffic/:_num', function(req,res,next){
           return false;
           res.json({err:null,data:req.body});
         })().catch(e => setImmediate(() => {console.error(e);}))
-        
+
 });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
