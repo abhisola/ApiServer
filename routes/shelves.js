@@ -476,7 +476,7 @@ router
   })().catch(e => setImmediate(() => {console.error(e);}))
 })
 .get('/restock/response/dashboard', function(req, res, next){
-  var fetchRack = "SELECT * from racks ORDER BY racknum DESC";
+  var fetchRack = "SELECT * from racks ORDER BY racknum ASC";
   const pool = new Pool(settings.database.postgres);
   (async () => {
       const dbresRacks = await pool.query(fetchRack);

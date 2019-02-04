@@ -1,0 +1,93 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    meta(name='description', content='')
+    meta(name='author', content='')
+    link(rel='icon', href='favicon.ico')
+    title=title
+    // Bootstrap core CSS
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css', integrity='sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ', crossorigin='anonymous')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+    // add ons
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap4.min.css', rel='stylesheet')
+    // Custom styles for this template
+    link(href='css/style.css', rel='stylesheet')
+  body
+    nav.navbar.navbar-toggleable-md.navbar-fixed-top.navbar-inverse.bg-inverse
+      button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#navbarTop', aria-controls='navbarTop', aria-expanded='false', aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      a.navbar-brand(href='#')
+        img(src='images/logo-red.svg', alt='SmartRack.io')
+      #navbarTop.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          li.nav-item
+            a.nav-link.active(href='#')
+              | Stores 
+              span.sr-only (current)
+    .container
+      .starter-template
+        h1 Stores
+        p.lead
+          | All stores are listed below.
+
+        ul.nav.nav-tabs
+          li.active
+            a(data-toggle='tab', href='#home') Home
+          |   
+          li
+            a(data-toggle='tab', href='#menu1') Menu 1
+          |  
+          li
+            a(data-toggle='tab', href='#menu2') Menu 2
+        .tab-content
+          #home.tab-pane.fade.in.active
+            h3 HOME
+            |     
+            p Some content.
+          |   
+          #menu1.tab-pane.fade
+            h3 Menu 1
+            |     
+            p Some content in menu 1.
+          |   
+          #menu2.tab-pane.fade
+            h3 Menu 2
+            |     
+            p Some content in menu 2.
+
+        table#storesTable.table
+          thead
+            tr
+              th Rack Num
+              th Status
+              th.sort(style='cursor:pointer;', data-sort='sort-location', data-key='location.address')
+                | Address
+              th.sort(style='cursor:pointer;', data-sort='sort-display', data-key='name') Name
+              th Actions
+          tbody
+            each rack in racks
+              tr.display(class=rack.active==null?'table-warning':rack.active?'table-success':'table-danger')
+                td= rack.racknum
+                td= ((rack.active?'Active':'Inactive') + (rack.status==null?'':': '+rack.status))
+                td
+                  a(href='#')
+                    | #{rack.name}
+                    br
+                    | #{rack.address}
+                td
+                  a(href='#') #{rack.name}
+                td(nowrap='')
+                  a.btn.btn-outline-primary.btn-sm(href='shelves/'+rack.racknum, role='button', aria-pressed='true')
+                    i.fa.fa-area-chart
+                  a.btn.btn-outline-primary.btn-sm(href='traffic/'+rack.racknum, role='button', aria-pressed='true')
+                    i.fa.fa-users
+                  a.btn.btn-outline-primary.btn-sm(href='shelves/restock/'+rack.racknum, role='button', aria-pressed='true')
+                    i.fa.fa-shopping-basket
+    script(type='text/javascript').
+      $(document).ready(function() {
+        $("#info").click(function() { $("#details").toggle(100); });
+      });

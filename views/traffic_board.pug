@@ -1,49 +1,71 @@
 extends layout.pug
 
 block content
-    .starter-template
-        if success
-            h2 Foot Traffic For #{rackname}
-                span(style='font-size:24px; font-weight:900') #{' ('+address})
-            p.lead
-                | To view audience, select a rack and date range below.
-                a#info(href='#')
-                i.fa.fa-info-circle(style='font-size:24px')
-            p#details(style='display:none;')
-                | The smart shelf passively collects wifi device data, and extrapolates for total audience based on the number of devices seen. Additional analytics, like return rate, store crossover, and linger time, are also available.
-            p.lead
-                | Showing in 
-                span(style='color: red; font-weight:600;') #{timezone} 
-                | timezone.
-            form.form-inline
-                .form-group
-                input#rackNum(type='hidden', value=racknum)
-                label(for='startDate') From
-                input#startDate.form-control(type='date', value='2016-11-10')
-                .form-group
-                label(for='endDate') To
-                input#endDate.form-control(type='date', value='2016-11-30')
-                button.btn.btn-primary(type='button', onclick='fetchDateRange()') View
-                i.fa.fa-gear.fa-spin.hidden-xl-down(style='font-size:30px')
-            div(calss='row')
-            .col-md-12.traffic-title
-                h2 People Count and Dwell Time
+    include nav.pug
+    .container
+      if success
+        .row
+          .col-md-12
+            h1
+              | Foot Traffic For #{rackname}
+              span#store_address #{' ('+address})
+            h3
+              | To view audience select a date range below. 
+              a#info
+                i.fa.fa-info-circle
+            #details
+              p  
+              p  
+            h3
+              | *All times are in 
+              span.text-danger CST 
+              |  timezone.
+        #rack_types.row
+          .col-lg-12.col-lg-offset-0.col-md-12
+            div
+              form.form-inline
+                  input#rackNum(type='hidden', value=racknum)
+                  span#from_date.text-danger From 
+                  input#startDate.big(type='date', value='2019-02-01')
+                  span#to_date.text-danger To 
+                  input#endDate.big(type='date', value='2019-02-01')
+                  a#date_range_button.btn.btn-primary(role='button') View 
+        #shelf_stock_row.row
+          .col-md-12
+            .traffic-title
+              h2 People Count and Dwell Time
+          .col-md-12
+            .shelves_chart_nodata
+              h1.text-center.text-muted No Data Found
+          .traffic_chart.col-md-12
             .row
-                .col-md-2.traffic-box
-                    h2#counter 0
-                    br
-                    h5 People Count
-                .col-md-2.traffic-box(style='margin-left: 10px;')
-                    h2#avgTime 0
-                    h5 Dwell Time
-            .col-md-12
-                h2.traffic-title Dwell Time (in seconds)
-                canvas#dateRangeChart
-            .col-md-12
-                h2.traffic-title Foot Traffic Count Hourly
-                canvas#dateRangeHourlyChart
-        else 
-            h1="We are sorry, "+msg
+              .col-md-3
+                .traffic-box
+                  h2#counter 560 
+                  h4 People Count
+              .col-md-3
+                .traffic-box
+                  h2#avgTime 20 
+                  h4 Dwell Time
+        .shelf_stock_row.row
+          .col-md-12
+            .traffic-title
+              h2 Dwell Time (in seconds)
+          .traffic_chart.col-md-12
+            canvas#dateRangeChart
+          .col-md-12
+            .shelves_chart_nodata
+              h1.text-center.text-muted No Data Found To Display Chart
+        .shelf_stock_row.row
+          .col-md-12
+            .traffic-title
+              h2 Foot Traffic Count Hourly
+          .traffic_chart.col-md-12
+            canvas#dateRangeHourlyChart
+          .col-md-12
+            .shelves_chart_nodata
+              h1.text-center.text-muted No Data Found To Display Chart
+      else 
+        h1="We are sorry, "+msg        
 block append scripts
-    script(src='/js/traffic.js')
-    
+  script(src='/js/traffic_page.js')

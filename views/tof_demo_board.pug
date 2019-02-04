@@ -1,0 +1,50 @@
+extends layout.pug
+block content
+  include nav.pug
+  .container
+    if success
+        .row
+            .col-md-12
+                h1
+                    | Smart Pringles Demo for #{rackname}
+                    span#store_address #{' ('+address})
+                h3  
+                    | To start your visit select a date range below.
+                    a#info
+                        i.fa.fa-info-circle
+                #details
+                    p
+                        | Sensors are placed at the back of the shelves which detects number of pringles can left in front of it.
+                h3
+                    | *All times are in 
+                    span.text-danger CST 
+                    |  timezone.
+        #rack_types.row    
+            .col-lg-12.col-lg-offset-0.col-md-12
+                div
+                    input#rackNum(type='hidden', value=racknum)
+                    span#from_date.text-danger Select Date 
+                    input#selectedDate.big(type='date')  
+                    a#date_range_button.btn.btn-primary(role='button') View 
+        #pringles_stock.row
+            .col-md-12
+                h2
+                    |   Shelf 1 
+            .col-md-12.pringles_chart            
+                .table-responsive
+                    table#pringles_table.table.table-hover.table-condensed
+                        thead
+                            tr  
+                                th row1
+                                th row2
+                                th row3
+                                th row4
+                                th row5
+                        tbody#data
+            .col-md-12
+                .shelves_chart_nodata
+                    h1.text-center.text-muted No Data Found To Display Chart   
+    else    
+        h1="We are sorry, "+msg
+block append scripts
+  script(src='/js/tof_demo_page.js')
