@@ -13,6 +13,9 @@ var trafficRouter = require('./routes/traffic');
 var targetModel = require('./models/target');
 var timelapseRouter = require('./routes/timelapse_router');
 var locationRouter = require('./routes/location');
+
+//Temporary Routes
+var tofdemoRouter = require('./routes/tof_sensor_demo');
 var settings = require('./settings');
 var app = express();
 
@@ -38,7 +41,7 @@ app.use('/shelves', shelvesRouter);
 app.use('/traffic', trafficRouter);
 app.use('/timelapse', timelapseRouter);
 app.use('/location', locationRouter);
-
+app.use('/tof_sensor_demo', tofdemoRouter);
 app.post('/api/traffic/:_num', function(req,res,next){
   var racknum = req.params['_num'];
   var res_data = req.body;

@@ -8,7 +8,7 @@ var api = {
     }
 }
 
-var used_host = api.online.host;
+var used_host = api.local.host;
 
 function getToday() {
     var today = new Date();
