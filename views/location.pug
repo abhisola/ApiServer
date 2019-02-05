@@ -8,7 +8,7 @@ block content
                 .col-md-12
                     h1.map_title
                         | Location For #{rackname} 
-                        span#store_address #{' ('+address}) 
+                        span#store_address #{' ('+address})
                         input#rackNum(type='hidden', value=racknum)
             .row.shelf_stock_row
                 .col-md-12
@@ -16,10 +16,9 @@ block content
                 .col-md-12
                     .shelves_chart_nodata
                         h1.text-center.text-muted No Data Found
-        else 
+        else
             h1="We are sorry, "+msg
 
 block append scripts
     script(src='/js/location_page.js')
     script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA-gD0X15B1pK_Rj8gz5qj6Mnn27f48aqg&callback=initMap')
-    
