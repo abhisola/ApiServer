@@ -24,6 +24,7 @@ router
   res.redirect('shelves/000001');
 })
 .get('/:_num', function(req, res,next) {
+  data.active_nav = 'shelves';
    var racknum = req.params['_num'];
     var fetchRack = "SELECT * from racks WHERE racknum='" + racknum + "'";
     var client = new Client(settings.database.postgres);
@@ -427,6 +428,7 @@ router
       var rack = dbresRacks.rows[0];
       rack.success = true;
       rack.title = "Restock";
+      rack.active_nav = 'restock';
       res.render('restock', rack);
     } else {
       res.render('restock', {
@@ -476,6 +478,7 @@ router
   })().catch(e => setImmediate(() => {console.error(e);}))
 })
 .get('/restock/response/dashboard', function(req, res, next){
+  data.active_nav = 'response';
   var fetchRack = "SELECT * from racks ORDER BY racknum ASC";
   const pool = new Pool(settings.database.postgres);
   (async () => {
@@ -483,6 +486,7 @@ router
       var data = {};
       data.racks = dbresRacks.rows;
       data.title = "Response Board";
+      data.active_nav = "response";
       res.render('response_board', data);
     pool.end()
   })().catch(e => setImmediate(() => {

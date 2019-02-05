@@ -178,16 +178,7 @@ function getURL() {
   return used_host + "/shelves/api/range/" + $("#rackNum").val();
 }
 
-function hideSpinner () {
-  $("i.fa-gear").addClass("hidden-xl-down");
-}
-
-function showSpinner () {
-  $("i.fa-gear").removeClass("hidden-xl-down");
-}
-
 function fetchData() {
- // event.preventDefault();
   showSpinner();
   $("canvas").empty();
   var start = $("#startDate").val()+"T00:00:00";
@@ -213,6 +204,7 @@ function fetchData() {
     },
     success: function (data) {
       console.log(JSON.stringify(data));
+      hideSpinner();
       if(data.err) {
         console.log('Serverside Error');
         hideStockChart();
@@ -226,7 +218,6 @@ function fetchData() {
           hideNoData();
           updateShelf(data.data);
         }
-        
       } 
     },
     error: function(data) {
@@ -234,6 +225,7 @@ function fetchData() {
       console.log(data);
       hideStockChart();
       showNoData();
+      hideSpinner ();
     }
   });
   return false;
@@ -244,6 +236,7 @@ function ini() {
   $("#startDate").val(getYesterday());
   hideStockChart();
   showNoData();
+  hideSpinner();
 }
 $(document).ready(function() {
   ini();
@@ -251,6 +244,13 @@ $(document).ready(function() {
     fetchData();
   });
 });
+
+function hideSpinner () {
+  $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?'':$(".fa.fa-gear.fa-2x.fa-spin").addClass('hidden');
+}
+function showSpinner () {
+  $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?$(".fa.fa-gear.fa-2x.fa-spin").removeClass('hidden'):'';
+}
 
 function showStockChart(params) {
   $(".stock_chart").hasClass('hidden')?$(".stock_chart").removeClass('hidden'):'';

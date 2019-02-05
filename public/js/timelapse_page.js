@@ -23,6 +23,7 @@ function ini() {
     });
     hideVideos();
     showNoData();
+    hideSpinner ();
 }
 
 videos = {};
@@ -62,7 +63,7 @@ function render() {
         var day1 = video_obj.urls[from]?luxon.DateTime.fromISO(video_obj.urls[from].date_recorded).toFormat('dd LLL'):'';
         var day2 = video_obj.urls[from+1]?luxon.DateTime.fromISO(video_obj.urls[from+1].date_recorded).toFormat('dd LLL'):'';
         var day3 = video_obj.urls[from+2]?luxon.DateTime.fromISO(video_obj.urls[from+2].date_recorded).toFormat('dd LLL'):'';
-        var video_top = "<div class='shelf_stock_row row'><div class='col-md-12 video-title' style='margin-bottom:20px;'><h2>Timelapse For Shelf " + (Number(video_obj.shelf)+1) + " - <span class='text-info'>Pringles Saur Cream And Onion </span></h2></div>";
+        var video_top = "<div class='shelf_stock_row row'><div class='col-md-12 video-title' style='margin-bottom:20px;'><h2>Timelapse For Shelf " + (Number(video_obj.shelf)+1) + /*" - <span class='text-info'>Pringles Saur Cream And Onion </span>"+*/"</h2></div>";
         var back_button = "<div class='col-md-1'> <a  onclick='pagenator(" + video_obj.shelf + ", true)'><img src='/img/back.jpg' ></a> </div>";
         var video_1 = "<div class='col-md-3 video-container'> <video src='"+vid1_src+"', id='1_shelf" + video_obj.shelf + "', controls='', style='background:black' width='250'></video><label class='video-container-label'>"+day1+"</label> </div> ";
         var video_2 = "<div class='col-md-3 video-container'> <video src='"+vid2_src+"', id='2_shelf" + video_obj.shelf + "', controls='', style='background:black' width='250'></video><label class='video-container-label'>"+day2+"</label> </div> ";
@@ -85,6 +86,7 @@ function pagenator(shelf_number, back) {
         render();
 }
 function fetchDateRange() {
+    showSpinner ();
     var date1 = $("#startDate").val();
     var date2 = $("#endDate").val();
     var range = {
@@ -110,6 +112,7 @@ function fetchDateRange() {
             "accept": "application/json",
         },
         success: function (data) {
+            hideSpinner ();
             if (data.err) { 
                 console.log('Serverside Error');
                 hideVideos();
@@ -133,6 +136,7 @@ function fetchDateRange() {
             console.log(data);
             hideVideos();
             showNoData();
+            hideSpinner ();
         }
     });
     return false;
@@ -151,6 +155,12 @@ $(document).ready(function () {
         myvid.get(0).play();
       });
   });
+  function hideSpinner () {
+    $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?'':$(".fa.fa-gear.fa-2x.fa-spin").addClass('hidden');
+  }
+  function showSpinner () {
+    $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?$(".fa.fa-gear.fa-2x.fa-spin").removeClass('hidden'):'';
+  }
 
   function showVideos(params) {
     $("#videos").hasClass('hidden')?$("#videos").removeClass('hidden'):'';

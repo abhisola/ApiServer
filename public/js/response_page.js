@@ -138,13 +138,13 @@ function getURL() {
     return used_host + "/shelves/api/restock/response/";
 }
 
-function hideSpinner() {
-    $("i.fa-gear").addClass("hidden-xl-down");
-}
-
-function showSpinner() {
-    $("i.fa-gear").removeClass("hidden-xl-down");
-}
+function hideSpinner () {
+    $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?'':$(".fa.fa-gear.fa-2x.fa-spin").addClass('hidden');
+  }
+  function showSpinner () {
+    $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?$(".fa.fa-gear.fa-2x.fa-spin").removeClass('hidden'):'';
+  }
+  
 var response_data;
 function fetchData() {
     showSpinner();
@@ -178,6 +178,7 @@ function fetchData() {
             "accept": "application/json",
         },
         success: function (data) {
+            hideSpinner();
             console.log(JSON.stringify(data));
             if (data.err) {
                 console.log('Serverside Error');
@@ -195,6 +196,7 @@ function fetchData() {
             console.log(data);
             hideResponseChart();
             showNoData();
+            hideSpinner();
         }
     });
     return false;
@@ -234,6 +236,7 @@ $(document).ready(function () {
     ini();
     hideResponseChart();
     showNoData();
+    hideSpinner();
 });
 
 function showResponseChart(params) {

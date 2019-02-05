@@ -77,15 +77,16 @@ function getURL() {
     return used_host + "/shelves/api/restock/range/" + racknum;
 }
 
-function hideSpinner() {
-    $("i.fa-gear").addClass("hidden-xl-down");
-}
-
-function showSpinner() {
-    $("i.fa-gear").removeClass("hidden-xl-down");
-}
+function hideSpinner () {
+    $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?'':$(".fa.fa-gear.fa-2x.fa-spin").addClass('hidden');
+  }
+  function showSpinner () {
+    $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?$(".fa.fa-gear.fa-2x.fa-spin").removeClass('hidden'):'';
+  }
+  
 var response_data;
 function fetchData() {
+    showSpinner();
     var date1 = $("#startDate").val();
     var date2 = $("#endDate").val();
     var utcDate1 = date1 + "T00:01:00"
@@ -113,6 +114,7 @@ function fetchData() {
             "accept": "application/json",
         },
         success: function (data) {
+            hideSpinner();
             if (data.err) {
                 hideRestockChart();
                 showNoData();
@@ -135,6 +137,7 @@ function fetchData() {
             console.log(data);
             hideRestockChart();
             showNoData();
+            hideSpinner();
         }
     });
     return false;
@@ -157,6 +160,7 @@ function ini() {
     $("#startDate").val(getYesterday());
     hideRestockChart();
     showNoData();
+    hideSpinner();
 }
 function refreshChart() {
     if(response_data) {

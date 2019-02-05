@@ -12,13 +12,13 @@ block content
                     h3
                         | To start your virtual visit select a date range below. 
                         a#info
-                        i.fa.fa-info-circle
+                            i.fa.fa-info-circle
                     #details
                         p
                         | Cameras on of each shelf of the Smart Rack take photos several times a day and then analyzed by an algorithm to count the number of triangles visible. These counts are expressed as a % full in the chart for each shelf.
                         p
                         | Videos of shelves in intervals from the time period selected are displayed below each shelf.
-                        h3
+                    h3
                         | *All times are in 
                         span.text-danger CST 
                         |  timezone.
@@ -32,6 +32,7 @@ block content
                             span#to_date.text-danger To 
                             input#endDate.big(type='date')
                             a#date_range_button.btn.btn-primary(role='button') View 
+                            .fa.fa-gear.fa-2x.fa-spin
             #videos
             
             .shelf_stock_row.row

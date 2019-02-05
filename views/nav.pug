@@ -9,15 +9,15 @@ nav.navbar.navbar-default
             span.icon-bar
         #navcol-1.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
-            li.active(role='presentation')
+            li(class=active_nav=='store'?'active':'',role='presentation')
               a(href='/') Stores
-            li(role='presentation')
+            li(class=active_nav=='shelves'?'active':'',role='presentation')
               a(href='/shelves/'+racknum) Shelf Stock
-            li(role='presentation')
+            li(class=active_nav=='traffic'?'active':'',role='presentation')
               a(href='/traffic/'+racknum) Traffic
-            li(role='presentation')
+            li(class=active_nav=='timelapse'?'active':'',role='presentation')
               a(href='/timelapse/'+racknum) Timelapse
-            li(role='presentation')
+            li(class=active_nav=='restock'?'active':'',role='presentation')
               a(href='/shelves/restock/'+racknum) Restock
-            li(role='presentation')
+            li(class=active_nav=='location'?'active':'',role='presentation')
               a(href='/location/'+racknum) Location

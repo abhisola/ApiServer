@@ -39,12 +39,16 @@ block content
                             | #{rack.address}
                           td #{rack.name}
                           td
-                            a.btn.btn-primary.btn-sm(href='shelves/'+rack.racknum, role='button', aria-pressed='true')
+                            a.btn.btn-primary.btn-sm.goto_button(href='shelves/'+rack.racknum, data-toggle="tooltip", title="Shelves Stock", role='button', aria-pressed='true')
                               i.fa.fa-area-chart
-                            a.btn.btn-primary.btn-sm(href='traffic/'+rack.racknum, role='button', aria-pressed='true')
+                            a.btn.btn-primary.btn-sm.goto_button(href='traffic/'+rack.racknum, data-toggle="tooltip", title="Store Traffic" role='button', aria-pressed='true')
                               i.fa.fa-group
-                            a.btn.btn-primary.btn-sm(href='shelves/restock/'+rack.racknum, role='button', aria-pressed='true')
+                            a.btn.btn-primary.btn-sm.goto_button(href='shelves/restock/'+rack.racknum, data-toggle="tooltip", title="Restock Analysis" role='button', aria-pressed='true')
                               i.fa.fa-shopping-basket
+                            a.btn.btn-primary.btn-sm.goto_button(href='location/'+rack.racknum, data-toggle="tooltip", title="Rack Location" role='button', aria-pressed='true')
+                              i.fa.fa-map-marker
+                            a.btn.btn-primary.btn-sm.goto_button(href='timelapse/'+rack.racknum, data-toggle="tooltip", title="Timelapse Videos" role='button', aria-pressed='true')
+                              i.fa.fa-clock-o
 
             #tab-2.tab-pane(role='tabpanel')
               .table-responsive
@@ -68,12 +72,16 @@ block content
                             | #{rack.address}
                           td #{rack.name}
                           td
-                            a.btn.btn-primary.btn-sm(href='shelves/'+rack.racknum, role='button', aria-pressed='true')
+                            a.btn.btn-primary.btn-sm.goto_button(href='shelves/'+rack.racknum, data-toggle="tooltip", title="Shelves Stock", role='button', aria-pressed='true')
                               i.fa.fa-area-chart
-                            a.btn.btn-primary.btn-sm(href='traffic/'+rack.racknum, role='button', aria-pressed='true')
+                            a.btn.btn-primary.btn-sm.goto_button(href='traffic/'+rack.racknum, data-toggle="tooltip", title="Store Traffic" role='button', aria-pressed='true')
                               i.fa.fa-group
-                            a.btn.btn-primary.btn-sm(href='shelves/restock/'+rack.racknum, role='button', aria-pressed='true')
+                            a.btn.btn-primary.btn-sm.goto_button(href='shelves/restock/'+rack.racknum, data-toggle="tooltip", title="Restock Analysis" role='button', aria-pressed='true')
                               i.fa.fa-shopping-basket
+                            a.btn.btn-primary.btn-sm.goto_button(href='location/'+rack.racknum, data-toggle="tooltip", title="Rack Location" role='button', aria-pressed='true')
+                              i.fa.fa-map-marker
+                            a.btn.btn-primary.btn-sm.goto_button(href='timelapse/'+rack.racknum, data-toggle="tooltip", title="Timelapse Videos" role='button', aria-pressed='true')
+                              i.fa.fa-clock-o
             #tab-3.tab-pane(role='tabpanel')
               .table-responsive
                 table.table.table-hover
@@ -96,10 +104,14 @@ block content
                             | #{rack.address}
                           td #{rack.name}
                           td
-                            a.btn.btn-primary.btn-sm(href='shelves/'+rack.racknum, role='button', aria-pressed='true')
+                            a.btn.btn-primary.btn-sm.goto_button(href='shelves/'+rack.racknum, data-toggle="tooltip", title="Shelves Stock", role='button', aria-pressed='true')
                               i.fa.fa-area-chart
-                            a.btn.btn-primary.btn-sm(href='traffic/'+rack.racknum, role='button', aria-pressed='true')
+                            a.btn.btn-primary.btn-sm.goto_button(href='traffic/'+rack.racknum, data-toggle="tooltip", title="Store Traffic" role='button', aria-pressed='true')
                               i.fa.fa-group
-                            a.btn.btn-primary.btn-sm(href='shelves/restock/'+rack.racknum, role='button', aria-pressed='true')
+                            a.btn.btn-primary.btn-sm.goto_button(href='shelves/restock/'+rack.racknum, data-toggle="tooltip", title="Restock Analysis" role='button', aria-pressed='true')
                               i.fa.fa-shopping-basket
+                            a.btn.btn-primary.btn-sm.goto_button(href='location/'+rack.racknum, data-toggle="tooltip", title="Rack Location" role='button', aria-pressed='true')
+                              i.fa.fa-map-marker
+                            a.btn.btn-primary.btn-sm.goto_button(href='timelapse/'+rack.racknum, data-toggle="tooltip", title="Timelapse Videos" role='button', aria-pressed='true')
+                              i.fa.fa-clock-o
           

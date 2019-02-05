@@ -12,7 +12,8 @@ mailer.init({
 var sent_from = settings.mail.from;
 var sent_to = settings.mail.to;
 var data = {
-  title : "Timelapse"
+  title : "Timelapse",
+  active_nav : "timelapse"
 }
 /* GET users listing. */
 router

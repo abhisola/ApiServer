@@ -8,7 +8,7 @@ block content
           h1 Response Dashboard
           h3
             | To start your response investigation select a date range below. 
-            a(href='#')
+            a#info
               i.fa.fa-info-circle
           #details
             p  
@@ -30,6 +30,7 @@ block content
             input#hours.big(type='number', placeholder='Hours Empty', value='6')
             span#to_date.text-danger Hours 
             a#date_range_button.btn.btn-primary(role='button') View 
+            .fa.fa-gear.fa-2x.fa-spin
       .row
         .col-md-12
           #racks_table

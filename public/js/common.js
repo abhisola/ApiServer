@@ -52,4 +52,5 @@ function sanatizeTimeAndFormat2(isoDateString) {
 $(document).ready(function() {
     $("#details").toggle(100);
     $("#info").click(function() { $("#details").toggle(100); });
+    $('[data-toggle="tooltip"]').tooltip();
 });

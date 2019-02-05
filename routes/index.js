@@ -6,7 +6,8 @@ var settings = require('../settings');
 router.get('/', function(req, res, next) {
   var data = {
     title: 'My Smart Rack',
-    racks: []
+    racks: [],
+    active_nav: 'store'
   }
   var fetchRack = "SELECT * from racks ORDER BY racknum ASC";
   const pool = new Pool(settings.database.postgres);

@@ -130,20 +130,14 @@ function getDateRangeURL() {
     return used_host + "/traffic/api/range/" + racknum;
 }
 
-function hideSpinner() {
-    $("i.fa-gear").addClass("hidden-xl-down");
-}
-
-function showSpinner() {
-    $("i.fa-gear").removeClass("hidden-xl-down");
-}
-
 function ini() {
     $("#endDate").val(getYesterday());
     $("#startDate").val(getYesterday());
+    
 }
 
 function fetchDateRange() {
+    showSpinner ();
     var date1 = $("#startDate").val();
     var date2 = $("#endDate").val();
     var utcDate1 = date1 + "T00:00:00"
@@ -171,6 +165,7 @@ function fetchDateRange() {
             "accept": "application/json",
         },
         success: function (data) {
+            hideSpinner ();
             if (data.err) {
                 console.log('Serverside Error');
                 hideTrafficChart();
@@ -194,6 +189,7 @@ function fetchDateRange() {
             console.log(data);
             hideTrafficChart();
             showNoData();
+            hideSpinner ();
         }
     });
     return false;
@@ -202,10 +198,17 @@ $(document).ready(function() {
     ini();
     hideTrafficChart();
     showNoData();
+    hideSpinner ();
     $("#date_range_button").click(function (event) {
         fetchDateRange();
     });
 });
+function hideSpinner () {
+    $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?'':$(".fa.fa-gear.fa-2x.fa-spin").addClass('hidden');
+  }
+  function showSpinner () {
+    $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?$(".fa.fa-gear.fa-2x.fa-spin").removeClass('hidden'):'';
+  }
 
 function showTrafficChart(params) {
     $(".traffic_chart").hasClass('hidden')?$(".traffic_chart").removeClass('hidden'):'';

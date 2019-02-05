@@ -3,7 +3,10 @@ var router = express.Router();
 var { Pool, Client } = require('pg');
 var _ = require('lodash');
 var settings = require('../settings');
-
+var data = {
+  title : "Smart Rack Location",
+  active_nav : "location"
+};
 router
 .get('/', function (req, res, next) {
   res.redirect('location/000001');
@@ -12,7 +15,6 @@ router
     var racknum = req.params['_num'];
      var fetchRack = "SELECT * from racks WHERE racknum='" + racknum + "'";
      var client = new Client(settings.database.postgres);
-     var data={}
      client.connect();
      client.query(fetchRack, function (err, dbres) {
            if (dbres) {

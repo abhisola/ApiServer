@@ -9,7 +9,7 @@ nav.navbar.navbar-default
             span.icon-bar
         #navcol-1.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
-            li.active(role='presentation')
+            li(class=active_nav=='store'?'active':'',role='presentation')
               a(href='/') Stores
-            li(role='presentation')
+            li(class=active_nav=='response'?'active':'',role='presentation')
               a(href='/shelves/restock/response/dashboard/') Restock Response

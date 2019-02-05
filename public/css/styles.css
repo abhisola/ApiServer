@@ -157,3 +157,19 @@ div#restock_tabs {
   color: rgb(231,76,60);
   font-weight: 700;
 }
+
+.goto_button {
+  margin-left:5px;
+}
+
+#info {
+  cursor: pointer;
+}
+
+.fa.fa-gear.fa-2x.fa-spin {
+  margin-left:20px;
+  vertical-align:sub;
+  font-size:35px;
+}
+
+
