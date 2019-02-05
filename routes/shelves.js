@@ -111,12 +111,12 @@ router
             if (dbresponse) {
               var format_start = DateTime.fromISO(start).toFormat('LLL dd, HH:mma');
               var format_end = DateTime.fromISO(end).toFormat('LLL dd, HH:mma');
-              subject = 'Target Smart Shelf Out of stock Alert for Store: ' + rack.name + ' || ' + format_end;
               var template_data = {
                 rackname : rack.name,
                 address : rack.address,
                 start: format_start,
                 end: format_end,
+                timezone: rack.time_zone,
                 shelves : [],
                 shelf_type : "",
                 rack_type : ""
@@ -124,11 +124,13 @@ router
               if (rack.rack_type == "target") {
                   template_data.rack_type = "Target";
               } else if (rack.rack_type == "dollar") {
-                  template_data.rack_type = "Dollar";
+                  template_data.rack_type = "Dollar General";
                   template_data.shelf_type = "Center ";
               } else {
                   template_data.rack_type = "Demo";
               }
+              subject = template_data.rack_type + ' Smart Shelf Out Of Stock Alert For Store: ' + rack.name + ' || ' + format_end + ' '+rack.time_zone;
+              
               _.forEach(dbresponse.rows, function (row, i) {
                 var found = _.find(template_data.shelves, {
                   'shelf_num': row.shelf_num
@@ -177,7 +179,7 @@ router
                     msg: 'Error Sending Mail!',
                     data: []
                   });
-                })
+                });
               }
               else {
                  res.json({
@@ -236,6 +238,7 @@ router
             var template_data = {
               rackname: rack.name,
               address: rack.address,
+              timezone: rack.time_zone,
               start: format_start,
               end: format_end,
               shelves: [],
@@ -245,7 +248,7 @@ router
             if (rack.rack_type == "target") {
                 template_data.rack_type = "Target";
             } else if (rack.rack_type == "dollar") {
-                template_data.rack_type = "Dollar";
+                template_data.rack_type = "Dollar General";
                 template_data.shelf_type = "Center ";
             } else {
                 template_data.rack_type = "Demo";
