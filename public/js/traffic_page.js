@@ -133,7 +133,6 @@ function getDateRangeURL() {
 function ini() {
     $("#endDate").val(getYesterday());
     $("#startDate").val(getYesterday());
-    
 }
 
 function fetchDateRange() {
@@ -199,6 +198,7 @@ $(document).ready(function() {
     hideTrafficChart();
     showNoData();
     hideSpinner ();
+
     $("#date_range_button").click(function (event) {
         fetchDateRange();
     });
@@ -209,6 +209,7 @@ function hideSpinner () {
   function showSpinner () {
     $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?$(".fa.fa-gear.fa-2x.fa-spin").removeClass('hidden'):'';
   }
+
 
 function showTrafficChart(params) {
     $(".traffic_chart").hasClass('hidden')?$(".traffic_chart").removeClass('hidden'):'';

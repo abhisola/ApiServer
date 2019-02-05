@@ -155,6 +155,7 @@ $(document).ready(function () {
         myvid.get(0).play();
       });
   });
+
   function hideSpinner () {
     $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?'':$(".fa.fa-gear.fa-2x.fa-spin").addClass('hidden');
   }

@@ -42,6 +42,7 @@ app.use('/traffic', trafficRouter);
 app.use('/timelapse', timelapseRouter);
 app.use('/location', locationRouter);
 app.use('/tof_sensor_demo', tofdemoRouter);
+
 app.post('/api/traffic/:_num', function(req,res,next){
   var racknum = req.params['_num'];
   var res_data = req.body;

@@ -76,7 +76,6 @@ function updateRestockShelf(resjson) {
 function getURL() {
     return used_host + "/shelves/api/restock/range/" + racknum;
 }
-
 function hideSpinner () {
     $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?'':$(".fa.fa-gear.fa-2x.fa-spin").addClass('hidden');
   }
