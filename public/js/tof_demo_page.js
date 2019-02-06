@@ -31,6 +31,7 @@ function getURLConfig(shelf) {
 }
 var response_data;
 function fetchData() {
+    showSpinner ();
     var date1 = $("#selectedDate").val();
     var utcDate1 = date1 + "T00:00:00"
     var date2 = $("#selectedDate").val();
@@ -58,6 +59,7 @@ function fetchData() {
             "accept": "application/json",
         },
         success: function (data) {
+            hideSpinner ();
             if (data.err) {
                 console.log('Serverside Error');
                 hidePringlesChart();
@@ -75,6 +77,7 @@ function fetchData() {
             }
         },
         error: function (data) {
+            hideSpinner ();
             console.log("Error");
             console.log(data);
         }
@@ -128,7 +131,6 @@ function updateData(data) {
 
 function render() {
     var rows = 5;
-    var dom = $('#data');
     var row = '<tr>'+
     '<td>'+getCans(cans.s1)+'</td>'+
     '<td>'+getCans(cans.s2)+'</td>'+
@@ -174,6 +176,11 @@ function ini() {
     $("#selectedDate").val(getToday());
     hidePringlesChart();
     showNoData();
+    hideSpinner ();
+}
+function refreshData() {
+    fetchData();
+    
 }
 $(document).ready(function () {
     ini();
@@ -181,7 +188,15 @@ $(document).ready(function () {
         fetchConfig(1);
         fetchData();
     });
+    setInterval(refreshData, 20000);
 });
+
+function hideSpinner () {
+    $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?'':$(".fa.fa-gear.fa-2x.fa-spin").addClass('hidden');
+  }
+  function showSpinner () {
+    $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?$(".fa.fa-gear.fa-2x.fa-spin").removeClass('hidden'):'';
+  }
 
 function showPringlesChart(params) {
     $(".pringles_chart").hasClass('hidden')?$(".pringles_chart").removeClass('hidden'):'';
