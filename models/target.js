@@ -13,7 +13,6 @@ target.addData = function(data, callback) {
     var client = new Client(settings.database.postgres);
        client.connect();
        client.query(querry, function (err, dbres){
-          console.log(err, dbres);
           if(dbres) {
               callback(null, {data: dbres, querry: querry})
           } else {
@@ -32,7 +31,6 @@ target.addFootData = function(rackid, callback) {
     var client = new Client(settings.database.postgres);
        client.connect();
        client.query(querry, function (err, dbres){
-          console.log(err, dbres);
           if(dbres) {
               callback(null, {data: dbres, querry: querry})
           } else {
@@ -65,7 +63,6 @@ target.addMotionData = function(data, callback) {
    var client = new Client(settings.database.postgres);
        client.connect();
        client.query(querry, function (err, dbres){
-          console.log(err, dbres);
           if(dbres) {
               callback(null, {data: dbres, querry: querry});
           } else {

@@ -33,7 +33,6 @@ router
           if (dbres) {
             if (dbres.rowCount > 0) {
               var rack = dbres.rows[0];
-              console.log(rack);
               data.racknum = rack.racknum;
               data.rackname = rack.name;
               data.address = rack.address;
@@ -68,7 +67,6 @@ router
   client.connect();
 
   client.query(querry, function (err, dbres){
-    console.log(err, dbres);
     if(dbres) {
       var output = _.groupBy(dbres.rows, function(b) { return b.shelf_num;});
       res.json({err:null,data:output});

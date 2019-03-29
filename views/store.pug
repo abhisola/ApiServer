@@ -24,20 +24,19 @@ block content
                     tr
                       th Rack Number
                       th Status 
+                      th Rack Name 
                       th Address 
-                      th Name 
+                      th Store Number
                       th Actions 
                   tbody
                     each rack in racks
                       if rack.rack_type == "target"
                         tr(class=rack.active==null?'light-warning':rack.active?'light-success':'light-danger')
                           td=rack.racknum
-                          td=((rack.active?'Active':'Inactive') + (rack.status==null?'':': '+rack.status)) 
-                          td
-                            | #{rack.name}
-                            br
-                            | #{rack.address}
+                          td=(rack.status==null?'':rack.status)
                           td #{rack.name}
+                          td #{rack.address}
+                          td #{rack.storenum}
                           td
                             a.btn.btn-primary.btn-sm.goto_button(href='shelves/'+rack.racknum, data-toggle="tooltip", title="Shelves Stock", role='button', aria-pressed='true')
                               i.fa.fa-area-chart

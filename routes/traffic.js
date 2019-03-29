@@ -29,7 +29,6 @@ router
        if (dbres) {
          if (dbres.rowCount > 0) {
            var rack = dbres.rows[0];
-           console.log(rack);
            data.racknum = rack.racknum;
            data.rackname = rack.name;
            data.address = rack.address;
@@ -47,7 +46,7 @@ router
        client.end();
        res.render('traffic_board', data);
      })
-})
+})/*
 .delete('/api/today/:_num', function(req, res, next) {
       var today = new Date();
       var dateString = today.getFullYear() + "-" + (today.getMonth()+1) +"-"+ today.getDate();
@@ -59,7 +58,6 @@ router
         client.connect();
         
         client.query(querry, function (err, dbres){
-          console.log(err, dbres);
           if(dbres) {
             res.json({err:null,data:dbres.rows});
           } else {
@@ -67,7 +65,7 @@ router
           }
           client.end();
         });
-})
+})*/
 /* Get PIR moton Date range */
 .post('/api/range/:_num', function(req, res, next) {
       var data = req.body;
