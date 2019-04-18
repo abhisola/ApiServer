@@ -174,7 +174,7 @@ router
                 .catch(err=>{
                   res.json({
                     success: false,
-                    msg: 'Error Sending Mail!',
+                    msg: err,
                     data: []
                   });
                 });

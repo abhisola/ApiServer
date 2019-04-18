@@ -47,14 +47,14 @@ var settings = {
             port : 5432
         }
     },
-    mail : {
+   /*mail : {
          service: 'Godaddy',
          host: "smtpout.secureserver.net",
          secureConnection: true,
          port: 465,
              auth: {
                  user: 'alerts@mysmartshelf.com',
-                 pass: 'R@jn33sh'
+                 pass: '@lerts14'
              },
             from: 'alerts@mysmartshelf.com',
             to: [
@@ -63,7 +63,24 @@ var settings = {
                 'alerts@mysmartshelf.com',
                 'azizahtas@gmail.com'
             ]
-    }
+   },*/
+   mail : {
+        service: 'gmail',
+        //host: "a2plcpnl0623.prod.iad2.secureserver.net",
+        //secureConnection: true,
+        //port: 465,
+            auth: {
+                user: 'smartshelfk@gmail.com',
+                pass: 'Chicago2050'
+            },
+           from: 'alerts@mysmartshelf.com',
+           to: [
+               'sashi7582@gmail.com',
+               'umairs869@gmail.com',
+               'alerts@mysmartshelf.com',
+               'azizahtas@gmail.com'
+           ]
+   },
 }
 
 
