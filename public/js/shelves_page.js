@@ -1,7 +1,8 @@
 // configure charts
+var products = [];
 Chart.defaults.global.legend.display = false;
 Chart.defaults.global.animation = false;
-    var currData = new Array();
+var currData = new Array();
 var charts = [];
 
 function customTooltips(tooltip) {
@@ -29,9 +30,6 @@ function customTooltips(tooltip) {
   } else {
     tooltipEl.classList.add('no-transform');
   }
-  // function getBody(bodyItem) {
-  //   return bodyItem.lines;
-  // }
   // Set Text
   if (tooltip.body) {
     var tableRoot = tooltipEl.querySelector('img');
@@ -40,14 +38,10 @@ function customTooltips(tooltip) {
     var ttImg = this._data.datasets[0].images[tooltip.dataPoints[0].index];
     val.innerHTML = tooltip.dataPoints[0].yLabel;
     date.innerHTML = 'date: '+tooltip.dataPoints[0].xLabel;
-    //console.log(ttImg, 'ttImg');
-    //tableRoot.src = "https://www.royalcanin.com/~/media/Royal-Canin/Product-Categories/cat-breed-landing-hero.ashx";
     tableRoot.src = ttImg;
   }
   var position = this._chart.canvas.getBoundingClientRect();
   var sTop = $(window).scrollTop();
-  //console.log(sTop, 'sTop');
-  // Display, position, and set styles for font
   tooltipEl.style.opacity = 1;
   tooltipEl.style.left = position.left + tooltip.caretX + 'px';
   tooltipEl.style.top = sTop + tooltip.caretY + 'px';
@@ -55,6 +49,15 @@ function customTooltips(tooltip) {
   tooltipEl.style.fontSize = tooltip.fontSize;
   tooltipEl.style.fontStyle = tooltip._fontStyle;
   tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
+}
+
+function getProductName(label) {
+  product_name = '';
+  for (let i = 0; i < products.length; i++) {
+    if(products[i]['plabel'] == label)
+      product_name = products[i]['pname'];
+  }
+  return product_name;
 }
 
 function updateShelf(json) {
@@ -174,10 +177,119 @@ charts.push(chart);
   hideSpinner();
 }
 
+function updateDetection(json){
+  var keys = Object.keys(json);
+  for(j=0; j<keys.length; j++) {
+    var shelf = Object.keys(json)[j];
+    var detection_txt = $('span#detection'+shelf);
+    var sorted = json[shelf].sort(function (shelf) {
+      return shelf['score']
+    })
+    detected_labels = [];
+    for (let i = 0; i < sorted.length; i++) {
+      for (let j = 0; j < detected_labels.length; j++) {
+        if(sorted[i]['detected_label'] != detected_labels[j])
+          detected_labels.push(sorted[i]['detected_label'])
+      }
+      if(detected_labels.length <= 0) 
+        detected_labels.push(sorted[i]['detected_label'])
+    }
+    detected_label = ''
+    for (let i = 0; i < detected_labels.length; i++) {
+      detected_label += getProductName(detected_labels[i]);
+    }
+    if (detected_label != '')
+      detection_txt.html('( '+detected_label+' )');
+    else 
+      detection_txt.html(detected_label);
+  }
+}
+
 function getURL() {
   return used_host + "/shelves/api/range/" + $("#rackNum").val();
 }
-
+function getDetectionURL() {
+  return used_host + "/shelves/api/detection/range/" + $("#rackNum").val();
+}
+function getProductURL() {
+  return used_host + "/product/api";
+}
+function fetchProducts() {
+  var start = $("#startDate").val()+"T00:00:00";
+  var end = $("#endDate").val()+"T23:59:00";
+  var arr = { startDate: start, endDate: end };
+  $.ajax({
+    cache : false,
+    type : 'GET',
+    url: getProductURL(),
+    xhrFields: {
+      // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+      // This can be used to set the 'withCredentials' property.
+      // Set the value to 'true' if you'd like to pass cookies to the server.
+      // If this is enabled, your server must respond with the header
+      // 'Access-Control-Allow-Credentials: true'.
+      withCredentials: false
+    },
+    success: function (data) {
+      console.log("Detection Data: ");
+      console.log(JSON.stringify(data));
+      if(data.err) {
+        console.log('Serverside Error');
+      } else {
+        if($.isEmptyObject(data.data)) {
+        } else {
+          products = data.data;
+          console.log(products)
+        }
+      } 
+    },
+    error: function(data) {
+      console.log("Error");
+      console.log(data);
+    }
+  });
+  return false;
+}
+function fetchDetection() {
+  set_detection_text_blank();
+  var start = $("#startDate").val()+"T00:00:00";
+  var end = $("#endDate").val()+"T23:59:00";
+  var arr = { startDate: start, endDate: end };
+  $.ajax({
+    cache : false,
+    type : 'POST',
+    url: getDetectionURL(),
+    dataType: "json",
+    data : JSON.stringify(arr),
+    contentType: 'application/json',
+    xhrFields: {
+      // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+      // This can be used to set the 'withCredentials' property.
+      // Set the value to 'true' if you'd like to pass cookies to the server.
+      // If this is enabled, your server must respond with the header
+      // 'Access-Control-Allow-Credentials: true'.
+      withCredentials: false
+    },
+    headers : {
+      "accept": "application/json",
+    },
+    success: function (data) {
+      if(data.err) {
+        console.log('Serverside Error');
+      } else {
+        if($.isEmptyObject(data.data)) {
+        } else {
+          updateDetection(data.data);
+        }
+      } 
+    },
+    error: function(data) {
+      console.log("Error");
+      console.log(data);
+    }
+  });
+  return false;
+}
 function fetchData() {
   showSpinner();
   $("canvas").empty();
@@ -203,7 +315,6 @@ function fetchData() {
       "accept": "application/json",
     },
     success: function (data) {
-      console.log(JSON.stringify(data));
       hideSpinner();
       if(data.err) {
         console.log('Serverside Error');
@@ -237,14 +348,19 @@ function ini() {
   hideStockChart();
   showNoData();
   hideSpinner();
+  fetchProducts();
 }
 $(document).ready(function() {
   ini();
   $("#date_range_button").click(function (event) {
     fetchData();
+    fetchDetection();
   });
 });
 
+function set_detection_text_blank() {
+  $('span.detection').html('')
+}
 function hideSpinner () {
   $(".fa.fa-gear.fa-2x.fa-spin").hasClass('hidden')?'':$(".fa.fa-gear.fa-2x.fa-spin").addClass('hidden');
 }

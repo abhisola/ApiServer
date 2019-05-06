@@ -37,7 +37,8 @@ block content
         div(id='shelf'+n, class='row shelf_stock_row')
           .col-md-12
             h2
-              | Shelf #{n+1}
+              | Shelf #{n+1} 
+              span(id='detection'+n,class='detection')
               //- span.text-info - Pringles Saur Cream And Onion 
           .stock_chart.col-md-12
               canvas(id='chart'+n,style='width:100%;height:200px;')

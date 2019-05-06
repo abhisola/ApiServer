@@ -26,31 +26,55 @@ router
 .get('/:_num', function(req, res,next) {
   data.active_nav = 'shelves';
    var racknum = req.params['_num'];
-    var fetchRack = "SELECT * from racks WHERE racknum='" + racknum + "'";
-    var client = new Client(settings.database.postgres);
-    client.connect();
-    client.query(fetchRack, function (err, dbres) {
-          if (dbres) {
-            if (dbres.rowCount > 0) {
-              var rack = dbres.rows[0];
-              data.racknum = rack.racknum;
-              data.rackname = rack.name;
-              data.address = rack.address;
-              data.shelf_count = rack.shelves;
-              data.timezone = rack.time_zone;
-              data.success = true;
-            } else {
-              data.racknum = racknum;
-              data.success = false;
-              data.msg = "Sorry the rack with Id " + racknum + " doesnot exist";
-            }
-          }else {
-              data.success = false;
-              data.msg = "Sorry Something went wrong serverside";
-          }
-          res.render('shelf_board', data);
-          client.end();
-    })
+    var fetchRack = "SELECT * from racks WHERE racknum=$1";
+    const pool = new Pool(settings.database.postgres);
+    (async () => {
+      const rack_details = await pool.query(fetchRack, [racknum])
+      if (rack_details.rowCount> 0) {
+        rack = rack_details.rows[0];
+        data.racknum = rack.racknum;
+        data.rackname = rack.name;
+        data.address = rack.address;
+        data.shelf_count = rack.shelves;
+        data.timezone = rack.time_zone;
+        data.success = true;
+      } else {
+        data.racknum = racknum;
+        data.success = false;
+        data.msg = "Sorry the rack with Id " + racknum + " doesnot exist";
+      }
+      res.render('shelf_board', data);
+      pool.end();
+    })().catch(e => setImmediate(() => {
+      console.log("Error Occured While Fetching Racks For Store Page");
+      console.log(e)
+    }))
+})
+.post('/api/detection/range/:_num', function (req, res, next) {
+  var data = req.body;
+  var racknum = req.params['_num'];
+  var start = data.startDate;
+  var end = data.endDate;
+
+  var get_detection_details = "SELECT detected_label,pid,shelfnum,score::int FROM detection_details " +
+    "WHERE date_recorded >= $1 AND  date_recorded <= $2 " +
+          "AND racknum = $3 " +
+          "ORDER BY shelfnum ASC, score ASC";
+    const pool = new Pool(settings.database.postgres);
+    (async () => {
+      const detection_details = await pool.query(get_detection_details, [start, end, racknum])
+      if (detection_details.rowCount> 0) {
+        var grouped_detection = _.groupBy(detection_details.rows, function(b) { return b.shelfnum;});
+        res.json({err:null,data:grouped_detection});
+      } else {
+        res.json({err:detection_details,data:[]});
+      }
+      pool.end();
+    })().catch(e => setImmediate(() => {
+      console.log("Error Occured While Getting Detection Details");
+      console.log(e)
+    }))
+
 })
 .post('/api/range/:_num', function(req, res, next) {
   var data = req.body;
@@ -58,23 +82,24 @@ router
   var start = data.startDate;
   var end = data.endDate;
 
-  var querry = "SELECT racknum,shelf_num,percent_full*100 AS percent,date_recorded,url FROM shelf_stock " +
-    "WHERE date_recorded >= '" + start + "' AND  date_recorded <= '" + end + "' " +
-          "AND racknum = '"+racknum+"' " +
+  var get_stock_details = "SELECT racknum,shelf_num,percent_full*100 AS percent,date_recorded,url FROM shelf_stock " +
+    "WHERE date_recorded >= $1 AND  date_recorded <= $2 " +
+          "AND racknum = $3 " +
           "ORDER BY date_recorded ASC";
-  console.log(querry);
-  var client = new Client(settings.database.postgres);
-  client.connect();
-
-  client.query(querry, function (err, dbres){
-    if(dbres) {
-      var output = _.groupBy(dbres.rows, function(b) { return b.shelf_num;});
-      res.json({err:null,data:output});
-    } else {
-      res.json({err:dbres,data:[]});
-    }
-    client.end();
-  });
+    const pool = new Pool(settings.database.postgres);
+    (async () => {
+      const stock_details = await pool.query(get_stock_details, [start, end, racknum])
+      if (stock_details.rowCount> 0) {
+        var grouped_stock = _.groupBy(stock_details.rows, function(b) { return b.shelf_num;});
+        res.json({err:null,data:grouped_stock});
+      } else {
+        res.json({err:stock_details,data:[]});
+      }
+      pool.end();
+    })().catch(e => setImmediate(() => {
+      console.log("Error Occured While Getting Stock Details");
+      console.log(e)
+    }))
 })
 .get('/api/sendreport/pre/yesterday/:_num', function (req, res, next){
     var racknum = req.params['_num'];
@@ -85,29 +110,29 @@ router
   res.redirect('/shelves/api/showreport/0/' + racknum);
 })
 .get('/api/sendreport/:_days/:_num', function(req, res, next){
+    
     var racknum = req.params['_num'];
     var days = parseInt(req.params['_days']);
     days = days + 1;
     var start = getDate(days) + "T00:01:00";
     var end = getDate(days) + "T23:59:00";
-    var fetchRack = "SELECT * from racks WHERE racknum='"+racknum+"'";
-    var client = new Client(settings.database.postgres);
-    var clientB = new Client(settings.database.postgres);
-    client.connect();
-    clientB.connect();
-    client.query(fetchRack, function(err, dbres) {
-      if(dbres) {
-        if(dbres.rowCount > 0) {
-          var rack = dbres.rows[0];
-          var querry = "SELECT racknum,shelf_num,percent_full*100 AS percent,date_recorded,url FROM shelf_stock " +
-            "WHERE date_recorded > '" + start + "' AND  date_recorded < '" + end + "' " +
-            "AND racknum = '" + racknum + "' " +
+  
+    var fetchRack = "SELECT * from racks WHERE racknum=$1";
+      const pool = new Pool(settings.database.postgres);
+      (async () => {
+        const rack_details = await pool.query(fetchRack, [racknum])
+        if (rack_details.rowCount> 0) {
+          var rack = rack_details.rows[0];
+          var get_stock_details = "SELECT racknum,shelf_num,percent_full*100 AS percent,date_recorded,url FROM shelf_stock " +
+            "WHERE date_recorded > $1 AND  date_recorded < $2 " +
+            "AND racknum = $3 " +
             "ORDER BY date_recorded DESC , shelf_num ASC";
-            var subject = '';
-            console.log(querry);
-          clientB.query(querry, function (err, dbresponse) {
-            if (dbresponse) {
-              var format_start = DateTime.fromISO(start).toFormat('LLL dd, HH:mma');
+          var subject = '';
+          const stock_details = await pool.query(get_stock_details, [start, end, racknum])
+          if(stock_details.rowCount>0) {
+            var format_start = DateTime.fromISO(start).toFormat('LLL dd, HH:mma');
+            var format_end = DateTime.fromISO(end).toFormat('LLL dd, HH:mma');
+            var format_start = DateTime.fromISO(start).toFormat('LLL dd, HH:mma');
               var format_end = DateTime.fromISO(end).toFormat('LLL dd, HH:mma');
               var template_data = {
                 rackname : rack.name,
@@ -128,8 +153,7 @@ router
                   template_data.rack_type = "Demo";
               }
               subject = template_data.rack_type + ' Smart Shelf Out Of Stock Alert For Store: ' + rack.name + ' || ' + format_end + ' '+rack.time_zone;
-              
-              _.forEach(dbresponse.rows, function (row, i) {
+              _.forEach(stock_details.rows, function (row, i) {
                 var found = _.find(template_data.shelves, {
                   'shelf_num': row.shelf_num
                 });
@@ -156,11 +180,30 @@ router
                     shelf.invStat = "Empty"
                     shelf.percent = 100;
                     template_data.shelves.push(shelf);
-                  }
+                  } 
                 }
               });
               template_data.shelves = _.sortBy(template_data.shelves, ['shelf_num']);
+              sendData(racknum, start, template_data.shelves);
               if (template_data.shelves.length > 0) {
+                var get_products = "SELECT * from products"
+                const product_data = await pool.query(get_products);
+
+                var get_detection_details = "SELECT detected_label,pid,shelfnum,score::int FROM detection_details " +
+                "WHERE date_recorded >= $1 AND  date_recorded <= $2 " +
+                      "AND racknum = $3 " +
+                      "ORDER BY shelfnum ASC, score ASC";
+                const detection_details = await pool.query(get_detection_details, [start, end, racknum])
+                if (detection_details.rowCount> 0) { 
+                  var grouped_detection = _.groupBy(detection_details.rows, function(b) { return b.shelfnum;});
+                  template_data.shelves.forEach(shelf => {
+                    product_Name = get_product_name(grouped_detection, shelf, product_data.rows);
+                    if (product_Name != '') {
+                      shelf.product = product_Name;
+                    } else shelf.product = '( '+ product_Name + ' )';
+                    
+                  });
+                }
                 mailer.send({
                   from: sent_from,
                   to: sent_to, //List of recievers,
@@ -180,66 +223,60 @@ router
                 });
               }
               else {
-                 res.json({
-                   success: true,
-                   msg: 'No Shelves Are Empty',
-                   data: []
-                 });
-               }
-
+                res.json({
+                  success: true,
+                  msg: 'No Shelves Are Empty',
+                  data: []
+                });
+              }
             } else {
-              console.log('Error: '+JSON.stringify(err));
-              console.log('DBRES: ' + JSON.stringify(dbres));
               res.json({ success: false, msg: 'No Data Found for range : '+start+' To '+end, data: [] });
             }
-            clientB.end();
-          })
-
         } else {
-            res.json({
-              success: false,
-              msg: 'Rack Not Found',
-              data: []
-            });
+          res.json({
+            success: false,
+            msg: 'Rack Not Found',
+            data: []
+          });
         }
-      } else {
-        res.json({success: false, msg: 'Something Went Wrong', data: []});
-      }
-      client.end();
-    });
-
+        pool.end();
+      })().catch(e => setImmediate(() => {
+        console.log("Error Occured While Sending Reports");
+        console.log(e)
+      }))
 })
 .get('/api/showreport/:_days/:_num', function (req, res, next) {
+     
   var racknum = req.params['_num'];
   var days = parseInt(req.params['_days']);
   days = days + 1;
   var start = getDate(days) + "T00:01:00";
   var end = getDate(days) + "T23:59:00";
-  var fetchRack = "SELECT * from racks WHERE racknum='" + racknum + "'";
-  var client = new Client(settings.database.postgres);
-  var clientB = new Client(settings.database.postgres);
-  client.connect();
-  clientB.connect();
-  client.query(fetchRack, function (err, dbres) {
-    if (dbres) {
-      if (dbres.rowCount > 0) {
-        var rack = dbres.rows[0];
-        var querry = "SELECT racknum,shelf_num,percent_full*100 AS percent,date_recorded,url FROM shelf_stock " +
-          "WHERE date_recorded > '" + start + "' AND  date_recorded < '" + end + "' " +
-          "AND racknum = '" + racknum + "' " +
-          "ORDER BY date_recorded DESC, shelf_num ASC ";
-        console.log(querry);
-        clientB.query(querry, function (err, dbresponse) {
-          if (dbresponse) {
-            var format_start = DateTime.fromISO(start).toFormat('LLL dd, HH:mma');
+
+  var fetchRack = "SELECT * from racks WHERE racknum=$1";
+    const pool = new Pool(settings.database.postgres);
+    (async () => {
+      const rack_details = await pool.query(fetchRack, [racknum])
+      if (rack_details.rowCount> 0) {
+        var rack = rack_details.rows[0];
+        var get_stock_details = "SELECT racknum,shelf_num,percent_full*100 AS percent,date_recorded,url FROM shelf_stock " +
+          "WHERE date_recorded > $1 AND  date_recorded < $2 " +
+          "AND racknum = $3 " +
+          "ORDER BY date_recorded DESC , shelf_num ASC";
+        var subject = '';
+        const stock_details = await pool.query(get_stock_details, [start, end, racknum])
+        if(stock_details.rowCount>0) {
+          var format_start = DateTime.fromISO(start).toFormat('LLL dd, HH:mma');
+          var format_end = DateTime.fromISO(end).toFormat('LLL dd, HH:mma');
+          var format_start = DateTime.fromISO(start).toFormat('LLL dd, HH:mma');
             var format_end = DateTime.fromISO(end).toFormat('LLL dd, HH:mma');
             var template_data = {
-              rackname: rack.name,
-              address: rack.address,
-              timezone: rack.time_zone,
+              rackname : rack.name,
+              address : rack.address,
               start: format_start,
               end: format_end,
-              shelves: [],
+              timezone: rack.time_zone,
+              shelves : [],
               shelf_type : "",
               rack_type : ""
             }
@@ -251,17 +288,18 @@ router
             } else {
                 template_data.rack_type = "Demo";
             }
-           _.forEach(dbresponse.rows, function (row, i) {
-             var found = _.find(template_data.shelves, {
-               'shelf_num': row.shelf_num
-             });
-             if (!found) {
-               var shelf = {
-                 percent: Math.round(100 - parseInt(row.percent)),
-                 shelf_num: row.shelf_num,
-                 url: row.url,
-                 invStat: ""
-               }
+            subject = template_data.rack_type + ' Smart Shelf Out Of Stock Alert For Store: ' + rack.name + ' || ' + format_end + ' '+rack.time_zone;
+            _.forEach(stock_details.rows, function (row, i) {
+              var found = _.find(template_data.shelves, {
+                'shelf_num': row.shelf_num
+              });
+              if (!found) {
+                var shelf = {
+                  percent: Math.round(100 - parseInt(row.percent)),
+                  shelf_num: row.shelf_num,
+                  url: row.url,
+                  invStat: ""
+                }
                 /*if (shelf.percent > 15 && shelf.percent <= 39) {
                   shelf.invStat = "Low";
                   shelf.percent = 25;
@@ -278,14 +316,28 @@ router
                   shelf.invStat = "Empty"
                   shelf.percent = 100;
                   template_data.shelves.push(shelf);
-                }
-             }
-           });
-           template_data.shelves = _.sortBy(template_data.shelves, ['shelf_num']);
-           if (template_data.shelves.length > 0) {
-            res.render('../mails/templates/shelf', template_data);
-           }
-           else {
+                } 
+              }
+            });
+            template_data.shelves = _.sortBy(template_data.shelves, ['shelf_num']);
+            if (template_data.shelves.length > 0) {
+              var get_products = "SELECT * from products"
+              const product_data = await pool.query(get_products);
+
+              var get_detection_details = "SELECT detected_label,pid,shelfnum,score::int FROM detection_details " +
+              "WHERE date_recorded >= $1 AND  date_recorded <= $2 " +
+                    "AND racknum = $3 " +
+                    "ORDER BY shelfnum ASC, score ASC";
+              const detection_details = await pool.query(get_detection_details, [start, end, racknum])
+              if (detection_details.rowCount> 0) { 
+                var grouped_detection = _.groupBy(detection_details.rows, function(b) { return b.shelfnum;});
+                template_data.shelves.forEach(shelf => {
+                  shelf.product = '( '+ get_product_name(grouped_detection, shelf, product_data.rows) + ' )'
+                });
+              }
+              res.render('../mails/templates/shelf', template_data);
+            }
+            else {
               res.json({
                 success: true,
                 msg: 'No Shelves Are Empty',
@@ -293,17 +345,8 @@ router
               });
             }
           } else {
-            console.log('Error: ' + JSON.stringify(err));
-            console.log('DBRES: ' + JSON.stringify(dbres));
-            res.json({
-              success: false,
-              msg: 'No Data Found for range : ' + start + ' To ' + end,
-              data: []
-            });
+            res.json({ success: false, msg: 'No Data Found for range : '+start+' To '+end, data: [] });
           }
-          clientB.end();
-        })
-
       } else {
         res.json({
           success: false,
@@ -311,16 +354,11 @@ router
           data: []
         });
       }
-    } else {
-      res.json({
-        success: false,
-        msg: 'Something Went Wrong',
-        data: []
-      });
-    }
-    client.end();
-  });
-
+      pool.end();
+    })().catch(e => setImmediate(() => {
+      console.log("Error Occured While Showing Reports");
+      console.log(e)
+    }))
 })
 .get('/api/restock/generate/:_days', function (req, res, next) {
       var days = parseInt(req.params['_days']);
@@ -523,6 +561,40 @@ router
   })().catch(e => setImmediate(() => { console.error(e); }))
 })
 ;
+function sendData(racknum, date, shelf_data, res) {
+  var shelves = ""
+  shelf_data.forEach(shelf => {
+    shelves += shelf.shelf_num + ","
+  });
+  if (shelf_data.length > 0) {
+    shelves = shelves.substring(0, shelves.length-1)
+  }
+  
+  var insert_report_data = "INSERT INTO public.report_alerts_generated ("
+        +"racknum, storenum, date_recorded, shelves) VALUES ($1, $2, $3, $4)"
+         "return rid;";
+  var check_if_inserted = "Select * from public.report_alerts_generated where racknum=$1 AND storenum=$2 AND date_recorded=$3"
+  var get_store_num = "Select storenum from racks where racknum=$1";
+  var alter_store = "UPDATE public.report_alerts_generated SET shelves=$1 WHERE racknum=$2 AND storenum=$3 AND date_recorded=$4"
+  const pool = new Pool(settings.database.postgres);
+  (async () => {
+    const storenum_data = await pool.query(get_store_num, [racknum])
+    storenum = storenum_data.rows[0].storenum;
+    const inserted = await pool.query(check_if_inserted, [racknum, storenum, date])
+    var alerts = [];
+    if(inserted.rowCount <= 0) {
+      console.log("Inserting Alerts Generated Row");
+      alerts = await pool.query(insert_report_data,[racknum, storenum, date, shelves]);
+    } else {
+      console.log("Updating Alerts Generated Row")
+      alerts = await pool.query(alter_store,[shelves,racknum, storenum, date]);
+    }
+    pool.end();
+  })().catch(e => setImmediate(() => {
+    console.log("Error Occured While Saving Alert Generated");
+    console.log(e)
+  }))
+}
 function getDate(days) {
   var today = new Date();
   var mius_days = DateTime.fromISO(today.toISOString()).minus({days:days});
@@ -536,6 +608,44 @@ function getDate(days) {
 
   return year + "-" + month + "-" + day;
 }
+function get_product_name(detection, shelf_data, products) {
+    json = detection
+    shelf = shelf_data.shelf_num
+    var keys = Object.keys(json);
+    
+    detected_labels = [];
+    for (let k = 0; k < keys.length; k++) {
+      var shelf_detect = Object.keys(json)[k];
+      if(shelf+'' == shelf_detect) {
+        var sorted = json[shelf].sort(function (shelf) {
+          return shelf['score']
+        })
+        
+        for (let i = 0; i < sorted.length; i++) {
+          for (let j = 0; j < detected_labels.length; j++) {
+            if(sorted[i]['detected_label'] != detected_labels[j])
+              detected_labels.push(sorted[i]['detected_label'])
+          }
+          if(detected_labels.length <= 0) 
+            detected_labels.push(sorted[i]['detected_label'])
+        }
+      }
+    }
+    
+    detected_label = ''
+    for (let i = 0; i < detected_labels.length; i++) {
+      detected_label += getDisplayName(detected_labels[i], products);
+    }
+    return detected_label;
+}
 
+function getDisplayName(label, products) {
+  product_name = '';
+  for (let i = 0; i < products.length; i++) {
+    if(products[i]['plabel'] == label)
+      product_name = products[i]['pname'];
+  }
+  return product_name;
+}
 
 module.exports = router;
