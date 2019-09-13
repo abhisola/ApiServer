@@ -53,7 +53,7 @@ target.addMotionData = function(data, callback) {
     var min = 0;
     if(has_minutes) min = str.substr(str.indexOf('.')+1, str.length)
     hour = minus ? str.substr(1, str.indexOf('.')-1) : str.substr(0, str.indexOf('.')-1)
-    var local_time = minus ? DateTime.local().minus({ hours: hour, minutes: min }).toFormat('yyyy-LL-dd TT') : DateTime.local(today).plus({ hours: hour, minutes: min }).toFormat('yyyy-LL-dd TT');
+    var local_time = minus ? DateTime.local().minus({ hours: hour, minutes: min }).toFormat('yyyy-LL-dd TT') : DateTime.local().plus({ hours: hour, minutes: min }).toFormat('yyyy-LL-dd TT');
    /* var local_time = DateTime.fromISO(iso).minus({
         hours: 5
     }).toFormat('yyyy-LL-dd TT');*/

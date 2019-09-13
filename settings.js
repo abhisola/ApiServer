@@ -43,7 +43,7 @@ var settings = {
             user : 'azizahtas',
             password : 'azizahtas',
             database : 'smartrack',
-            host: 'smart-rack.cyrisb241pul.us-east-1.rds.amazonaws.com',
+            host: 'smart-rack.cbzabakg0mpj.us-east-1.rds.amazonaws.com',
             port : 5432
         }
     },
