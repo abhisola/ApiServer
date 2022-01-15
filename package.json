@@ -20,7 +20,7 @@
     "pug": "2.0.0-beta11",
     "pug-mailer": "^1.0.1",
     "redis": "^2.8.0",
-    "shelljs": "^0.8.1",
+    "shelljs": "^0.8.5",
     "throng": "^4.0.0"
   }
 }
